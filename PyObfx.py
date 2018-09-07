@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 
-from scripts.io import tokenize, read_file
+from scripts.io import read_file
+from scripts.tokenizer import tokenize
 
 def main():
 	print("PyObfx v1.0")
