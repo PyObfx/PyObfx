@@ -1,3 +1,5 @@
+#!/usr/bin/python3.6
+# -*- coding: utf-8 -*-
 import argparse
 """
 Once, there was a world. A world filled with a magic. A world with lots of
@@ -10,7 +12,7 @@ Azkward. A man chaos gods chose for their invasion. An invincible man. With the
 power of chaos gods, his invasion's starting from North...
 """
 def cli_arg_parser():
-    parser = argparse.ArgumentParser(description="Fancy Description!")
+    parser = argparse.ArgumentParser()
     # List args
     # This can be replaced after with -p option that automatically
     # obsf each .py file in the given -p ath.
@@ -24,7 +26,7 @@ def function_dispatcher():
     # Testing purposes. Since [file] is a required param, obviously it wont
     # be empty.
     if args['file']:
-        print("Aight, opening the file!")
-
+        return args
+    return None
 # Testing if its working
-function_dispatcher()
+#function_dispatcher()
