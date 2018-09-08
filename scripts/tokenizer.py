@@ -9,16 +9,16 @@ def tokenize(data):
     lex = Python3Lexer()
     return_dic = {}
 
-    veriables = []
+    variables = []
     strings = []
     operators = []
     punctuation = []
     docs_str = []
-    commnets = []
+    comments = []
 
     for toktype, tokvalue in lex.get_tokens(data):
         if toktype is Token.Name:
-            veriables.append(tokvalue)
+            variables.append(tokvalue)
         elif toktype is Token.Literal.String.Double or toktype is Token.Literal.String.Single:
             strings.append(tokvalue)
         elif toktype is Token.Operator.Word:
@@ -28,16 +28,16 @@ def tokenize(data):
         elif toktype is Token.Literal.String.Doc:
             docs_str.append(tokvalue)
         elif toktype is Token.Comment.Single:
-            commnets.append(tokvalue)
+            comments.append(tokvalue)
 
         #print(f" {toktype} --> {tokvalue}  ")
 
     return_dic = {
-        'veriables': veriables,
+        'variables': variables,
         'strings': strings,
         'operators': operators,
         'punctuation': punctuation,
         'docs_str': docs_str,
-        'commnets': commnets,
+        'comments': comments,
     }
     return return_dic
