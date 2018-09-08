@@ -11,6 +11,8 @@ People call them savages. Savages that lost their humanity under their lord. Lor
 Azkward. A man chaos gods chose for their invasion. An invincible man. With the
 power of chaos gods, his invasion's starting from North...
 """
+
+
 def cli_arg_parser():
     parser = argparse.ArgumentParser()
     # List args
@@ -21,6 +23,7 @@ def cli_arg_parser():
     # Dic format
     return vars(parser.parse_args())
 
+
 def function_dispatcher():
     args = cli_arg_parser()
     # Testing purposes. Since [file] is a required param, obviously it wont
@@ -29,4 +32,4 @@ def function_dispatcher():
         return args
     return None
 # Testing if its working
-#function_dispatcher()
+# function_dispatcher()
