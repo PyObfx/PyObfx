@@ -4,7 +4,15 @@ import os
 
 #BASEDIR  = os.path.dirname(os.path.realpath(__file__))
 
+
+class FileTypeException(Exception):
+    pass
+
+
 def read_file(filename):
+    if os.path.splitext(filename)[1] != '.py':
+        raise FileTypeException("Only Python(.py) file.")
+
     with open(filename) as file:
         data = file.read()
     return data

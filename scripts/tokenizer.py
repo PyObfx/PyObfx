@@ -5,39 +5,84 @@ from pygments.lexers import Python3Lexer
 from pygments.token import Token
 
 
-def tokenize(data):
-    lex = Python3Lexer()
-    return_dic = {}
+class Tokenizer:
+    """ 
+        Tokenizer class: 
+            @param data: soruce code
 
-    variables = []
-    strings = []
-    operators = []
-    punctuation = []
-    docs_str = []
-    comments = []
+        Usage:
+            tokenizer = Tokenizer(source_code)
+            tokenizer.tokenize()
 
-    for toktype, tokvalue in lex.get_tokens(data):
-        if toktype is Token.Name:
-            variables.append(tokvalue)
-        elif toktype is Token.Literal.String.Double or toktype is Token.Literal.String.Single:
-            strings.append(tokvalue)
-        elif toktype is Token.Operator.Word:
-            operators.append(tokvalue)
-        elif toktype is Token.Punctuation:
-            punctuation.append(tokvalue)
-        elif toktype is Token.Literal.String.Doc:
-            docs_str.append(tokvalue)
-        elif toktype is Token.Comment.Single:
-            comments.append(tokvalue)
+            # also
+            tokenizer.get_next_token()  #---> get one token
+    """
 
-        #print(f" {toktype} --> {tokvalue}  ")
+    def __init__(self, data):
+        self.tokens = Python3Lexer().get_tokens(data)
 
-    return_dic = {
-        'variables': variables,
-        'strings': strings,
-        'operators': operators,
-        'punctuation': punctuation,
-        'docs_str': docs_str,
-        'comments': comments,
-    }
-    return return_dic
+    def get_next_token(self):
+        return next(self.tokens)
+
+    def tokenize(self):
+        return_dic = {}
+
+        variables = []
+        strings = []
+        operators = []
+        punctuation = []
+        docs_str = []
+        comments = []
+        namespaces = []
+        keywords = []
+        integers = []
+        exceptions = []
+
+        for toktype, tokvalue in self.tokens:
+            if toktype is Token.Name.Namespace:
+                namespaces.append(tokvalue)
+                continue
+
+            elif toktype is Token.Name.Exception:
+                exceptions.append(tokvalue)
+                continue
+
+            elif toktype is Token.Literal.Number.Integer:
+                integers.append(tokvalue)
+
+            elif toktype is Token.Keyword:
+                keywords.append(tokvalue)
+
+            elif toktype is Token.Name:
+                variables.append(tokvalue)
+
+            elif toktype is Token.Literal.String.Double or toktype is Token.Literal.String.Single:
+                strings.append(tokvalue)
+
+            elif toktype is Token.Operator.Word or toktype is Token.Operator:
+                operators.append(tokvalue)
+
+            elif toktype is Token.Punctuation:
+                punctuation.append(tokvalue)
+
+            elif toktype is Token.Literal.String.Doc:
+                docs_str.append(tokvalue)
+
+            elif toktype is Token.Comment.Single:
+                comments.append(tokvalue)
+
+            #print(f" {toktype} --> {repr(tokvalue)}  ")
+
+        return_dic = {
+            'variables': variables,
+            'strings': strings,
+            'operators': operators,
+            'punctuation': punctuation,
+            'docs_str': docs_str,
+            'commnets': comments,
+            'namespaces': namespaces,
+            'keywords': keywords,
+            'integers': integers,
+            'exceptions': exceptions,
+        }
+        return return_dic
