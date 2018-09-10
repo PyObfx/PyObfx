@@ -8,7 +8,7 @@ from pygments.token import Token
 class Tokenizer:
     """ 
         Tokenizer class: 
-            @param data: soruce code
+            @param data: source code
 
         Usage:
             tokenizer = Tokenizer(source_code)
