@@ -29,13 +29,12 @@ class StringGenerator:
 		self.before = []
 
 	def generate(self, count):
-		while True:
-			result = ""
-			for _ in range( count + 1 ):
-				result += random.choice( self.rndType[self.type] )
+		result = ""
+		for _ in range( count + 1 ):
+			result += random.choice( self.rndType[self.type] )
 
-			if result in self.pyKeywords:
-				continue
-			return result
+		if result in self.pyKeywords:
+			pass
+		return result
 
 
