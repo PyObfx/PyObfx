@@ -1,4 +1,4 @@
-﻿# -*- coding utf:8 -*-
+# -*- coding utf:8 -*-
 
 import random
 import string
@@ -11,7 +11,7 @@ class StringGenerator:
 		           list( string.whitespace ) + list( "~`!@#$%^&*()_+-=[]{}|;:<>?,." )
 		self.hindi = ["ौ","ै","ा","ी","ू","ब","ह","ग","द","ज","ड","ो","े","्","ि","ु","प","र","क","त","च","ट","म","न","व","ल","स","य"]
 		self.japanese = ["う","ぇ","て","ゅ","い","お","っ","あ","ん"]
-		self.chinese = ["摆","汜","蓠","戈","人","心","最","杰","圻","丈","中","重","钕","月","弓","一","儿","勒","屁","艾","西","伊"]
+		self.chinese = ["摆","汜","蓠","戈","人","心","最","杰","圻","丈","中","重","钕","月","弓","一","儿","勒","屁","艾","西","伊", "import"]
 		self.rndType = {1: list( string.ascii_uppercase ) + list( string.ascii_lowercase ),
 		                2: list( string.ascii_uppercase ) + list( string.ascii_lowercase ) +
 		                   list( string.digits ) + list( string.punctuation ) + list( string.whitespace ),
@@ -30,11 +30,9 @@ class StringGenerator:
 
 	def generate(self, count):
 		result = ""
-		for _ in range( count + 1 ):
-			result += random.choice( self.rndType[self.type] )
-
+		for _ in range(count):
+			result += random.choice(self.rndType[self.type])
 		if result in self.pyKeywords:
-			pass
-		return result
-
-
+			return self.generate(count)
+		else:	
+			return result
