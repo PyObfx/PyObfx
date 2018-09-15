@@ -1,38 +1,25 @@
-# -*- coding utf:8 -*-
+# coding: utf-8
 
-import random
-import string
+import random, string
 
-class StringGenerator:
-	def __init__(self, type):
-		self.type = type  # 1- Variable | 2- String | 3- All | 4- Japanese | 5- Chinese | 6-Hindi
-		self.all = list( string.ascii_uppercase ) + list( string.ascii_lowercase ) + list( string.digits ) + list(
-			string.punctuation ) + \
-		           list( string.whitespace ) + list( "~`!@#$%^&*()_+-=[]{}|;:<>?,." )
-		self.hindi = ["ौ","ै","ा","ी","ू","ब","ह","ग","द","ज","ड","ो","े","्","ि","ु","प","र","क","त","च","ट","म","न","व","ल","स","य"]
-		self.japanese = ["う","ぇ","て","ゅ","い","お","っ","あ","ん"]
-		self.chinese = ["摆","汜","蓠","戈","人","心","最","杰","圻","丈","中","重","钕","月","弓","一","儿","勒","屁","艾","西","伊", "import"]
-		self.rndType = {1: list( string.ascii_uppercase ) + list( string.ascii_lowercase ),
-		                2: list( string.ascii_uppercase ) + list( string.ascii_lowercase ) +
-		                   list( string.digits ) + list( string.punctuation ) + list( string.whitespace ),
-		                3: self.all,
-		                4: self.japanese,
-		                5: self.chinese,
-		                6: self.hindi}
-		self.pyKeywords = ["False", "None", "True", "and", "as", "assert", "break", "class", "continue", "def", "del",
-		                   "elif", "else", "except",
-		                   "finally", "for", "from", "global", "if", "import", "in", "is", "lambda", "nonlocal", "not",
-		                   "or", "pass", "raise",
-		                   "return", "try", "while", "with", "yield"]
+py_keywords = __import__('keyword').kwlist
+generate_alphabet = lambda x, y: ''.join(map(chr, range(x, y)))
 
-	def __before__(self):
-		self.before = []
+hindi    = generate_alphabet(0x900, 0x97F)   # Devanagari ( 0900 - 097F )
+chinese  = generate_alphabet(0x4E00, 0x9FFF) # CJK Unified Ideographs( 4E00 - 9FFF )
+japanese = generate_alphabet(0x3040, 0x309F) # Hiragana ( 3040 - 309F)
 
-	def generate(self, count):
-		result = ""
-		for _ in range(count):
-			result += random.choice(self.rndType[self.type])
-		if result in self.pyKeywords:
-			return self.generate(count)
-		else:	
-			return result
+random_types = {
+    1: string.ascii_letters,
+    2: string.printable,
+    3: japanese,
+    4: chinese,
+    5: hindi
+}
+
+def generate_rand_str(rnd_type, count):
+    characters = random_types[rnd_type]
+    return ''.join(random.sample(
+        characters, 
+        count if count < len(characters) else len(characters)
+    ))
