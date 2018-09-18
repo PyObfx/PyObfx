@@ -22,6 +22,6 @@ def main():
 	tokens = tokenizer.tokenize()
 	obfuscator = Obfuscator(pyfile, tokens)
 	obfuscator.obfuscate()
-
+	
 if __name__ == "__main__":
 	main()
