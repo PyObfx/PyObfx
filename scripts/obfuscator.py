@@ -1,39 +1,35 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 
+import random
+
 class Obfuscator:
-	def __init__(self, file_content, tokens):
-		self.file_content = file_content
-		self.tokens = tokens
+    def __init__(self, file_content, tokens):
+        self.file_content = file_content
+        self.tokens = tokens
+        self.ints = [random.randint(1, 5) for _ in range(3)]
+        self.deobfuscators = {
+            1: "lambda n: (n - ({} % {})) - {}".format(*self.ints[::-1]),
+            2: "lambda n: int((n ^ {}) / {})".format(*self.ints[:2]),
+            3: "lambda n: n - sum({})".format(str(self.ints))
+        }
 
-	def obfuscate(self, string_obfuscation=1):
-		string_obfuscators = {1: self.obfuscate_string1, 2: self.obfuscate_string2}
-		string_obfuscator = string_obfuscators[string_obfuscation]
-		for s in filter(lambda s: s != '"' and s != "'", self.tokens['strings']):
-			print(s, string_obfuscator(s)) #printing encrypted string for now
+    string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)" # str.format with int deobfuscator name
+    string_deobfuscator2 = lambda self, obfuscation: "lambda s: ''.join(chr(({})(ord(c))) for c in s)".format(self.deobfuscators[obfuscation])
 
-	def obfuscate_string1(self, s):
-		out = [0]
-		for c in s:
-			out.extend([(ord(c) / 3) + (out[-1] % 2), 0])
-		return out
+    def _escape(self, s):
+        return s.replace('"', r'\"').replace("'", r"\'")
 
-	def deobfuscate_string1(self, s):
-		out = ''
-		for i in range(1, len(s), 2):
-			out += chr(int((s[i] - (s[i-1] % 2)) * 3))
-		return out
+    def obfuscate(self, obfuscation=1):
+        obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
+        obfuscator = obfuscators[obfuscation]
+        for s in filter(lambda s: s != '"' and s != "'", self.tokens['strings']):
+            obfuscated_string = self._escape(''.join(chr(obfuscator(ord(c))) for c in s))
+            print(s, obfuscated_string) # printing encrypted string for now
 
-	def obfuscate_string2(self, s):
-		rot13 = str.maketrans(
-			'ABCDEFGHIJKLMabcdefghijklmNOPQRSTUVWXYZnopqrstuvwxyz',
-			'NOPQRSTUVWXYZnopqrstuvwxyzABCDEFGHIJKLMabcdefghijklm'
-		)
-		return s.translate(rot13)
+        for i in self.tokens['integers']:
+            print(i, obfuscator(int(i)))
 
-	def deobfuscate_string2(self, s):
-		rot13 = str.maketrans(
-			'NOPQRSTUVWXYZnopqrstuvwxyzABCDEFGHIJKLMabcdefghijklm',
-			'ABCDEFGHIJKLMabcdefghijklmNOPQRSTUVWXYZnopqrstuvwxyz'
-		)
-		return s.translate(rot13)
+    obfuscation1 = lambda self, n: (n + self.ints[0]) + (self.ints[2] % self.ints[1])
+    obfuscation2 = lambda self, n: (n * self.ints[1]) ^ self.ints[0]
+    obfuscation3 = lambda self, n: n + sum(self.ints)
