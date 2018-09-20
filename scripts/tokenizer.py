@@ -14,14 +14,7 @@ class Tokenizer:
     def __init__(self, data):
         self._tokens = Python3Lexer().get_tokens(data)
         self._tokens = list(filter(lambda x: not (x[0] == Token.Text and x[1] == ' '), self._tokens))
-        self.tokenize()
-
-    def genenate_id(self):
-        while True:
-            tok_id = randint(0, 1000)
-            if tok_id in [i[0] for i in self.TOKENS]:
-                continue
-            return tok_id
+        self._tokenize()
 
     def find_by_id(self, _id):
         for token in self.TOKENS:
@@ -32,17 +25,8 @@ class Tokenizer:
     def get_next_token(self):
         return next(self._tokens)
 
-    def tokenize(self):
-        check_dict = dict()
-        for toktype, tokvalue in self._tokens:
-            tok_id = self.genenate_id()
-            if not str(tokvalue) in list(check_dict.keys()):
-                check_dict[str(tokvalue)] = (tok_id, str(toktype))
-                self.TOKENS.append((tok_id, str(toktype), str(tokvalue)) )
-            else:
-                self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))       
-        del check_dict
-        print(self.get_variables()[1])
+    def get_tokens(self):
+        return self.TOKENS
 
     def get_variables(self): # str | int | float | bool
         str_vars, int_vars, float_vars, bool_vars = {}, {}, {}, {}
@@ -54,7 +38,8 @@ class Tokenizer:
                     (self._tokens[key+2][1] in self.QUOTES):
                     text = ''
                     for tok in self._tokens[key+3:]:
-                        if (tok[0] == Token.Literal.String.Double or tok[0] == Token.Literal.String.Single) and tok[1] in self.QUOTES:
+                        if (tok[0] == Token.Literal.String.Double or tok[0] == Token.Literal.String.Single) \
+                         and tok[1] in self.QUOTES:
                             str_vars[name] = text
                             break
                         text += tok[1]
@@ -65,3 +50,21 @@ class Tokenizer:
                 elif self._tokens[key+2][0] == Token.Keyword.Constant and self._tokens[key+2][1] in self.BOOLS:
                     bool_vars[name] = bool(self._tokens[key+2][1])
         return [str_vars, int_vars, float_vars, bool_vars]
+
+    def _generate_id(self):
+        while True:
+            tok_id = randint(0, 1000)
+            if tok_id in [i[0] for i in self.TOKENS]:
+                continue
+            return tok_id
+
+    def _tokenize(self):
+        check_dict = dict()
+        for toktype, tokvalue in self._tokens:
+            tok_id = self._generate_id()
+            if not str(tokvalue) in list(check_dict.keys()):
+                check_dict[str(tokvalue)] = (tok_id, str(toktype))
+                self.TOKENS.append((tok_id, str(toktype), str(tokvalue)))
+            else:
+                self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))       
+        del check_dict

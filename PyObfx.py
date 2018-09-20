@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from scripts.io import read_file
-from scripts.tokenizer import Tokenizer
 from scripts.argparser import cli_arg_parser
 from scripts.obfuscator import Obfuscator
 from scripts.strgen import StringGenerator
@@ -19,9 +18,8 @@ def main():
 	print_header()
 	args = cli_arg_parser()
 	pyfile = read_file(args['file'])
-	tokenizer = Tokenizer(pyfile)
-	#for i in tokenizer.TOKENS:
-		#print(i)
+	obfuscator = Obfuscator(pyfile)
+	obfuscator.obfuscate()
 
 if __name__ == "__main__":
 	main()
