@@ -20,9 +20,10 @@ def main():
 	args = cli_arg_parser()
 	pyfile = read_file(args['file'])
 	tokenizer = Tokenizer(pyfile)
-	tokens = tokenizer.tokenize()
-	obfuscator = Obfuscator(pyfile, tokens)
-	obfuscator.obfuscate()
+	for i in tokenizer.TOKENS:
+		print(i)
+	while True:
+		print(tokenizer.find_by_id(int(input('--> '))))
 
 if __name__ == "__main__":
 	main()

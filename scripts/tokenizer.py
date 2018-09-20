@@ -3,86 +3,40 @@
 
 from pygments.lexers import Python3Lexer
 from pygments.token import Token
+from random import randint
 
 
 class Tokenizer:
-    """ 
-        Tokenizer class: 
-            @param data: source code
-
-        Usage:
-            tokenizer = Tokenizer(source_code)
-            tokenizer.tokenize()
-
-            # also
-            tokenizer.get_next_token()  #---> get one token
-    """
+    TOKENS = list()
 
     def __init__(self, data):
-        self.tokens = Python3Lexer().get_tokens(data)
+        self._tokens = Python3Lexer().get_tokens(data)
+        self.tokenize()
+
+    def genenate_id(self):
+        while True:
+            tok_id = randint(0, 1000)
+            if tok_id in [i[0] for i in self.TOKENS]:
+                continue
+            return tok_id
+
+    def find_by_id(self, _id):
+        for token in self.TOKENS:
+            if token[0] == _id:
+                return token
+        return (None, None, None)
 
     def get_next_token(self):
-        return next(self.tokens)
+        return next(self._tokens)
 
     def tokenize(self):
-        return_dic = {}
-
-        variables = []
-        strings = []
-        operators = []
-        punctuation = []
-        docs_str = []
-        comments = []
-        namespaces = []
-        keywords = []
-        integers = []
-        exceptions = []
-
-        for toktype, tokvalue in self.tokens:
-            if toktype is Token.Name.Namespace:
-                namespaces.append(tokvalue)
-                continue
-
-            elif toktype is Token.Name.Exception:
-                exceptions.append(tokvalue)
-                continue
-
-            elif toktype is Token.Literal.Number.Integer:
-                integers.append(tokvalue)
-
-            elif toktype is Token.Keyword:
-                keywords.append(tokvalue)
-
-            elif toktype is Token.Name:
-                variables.append(tokvalue)
-
-            elif toktype is Token.Literal.String.Double or toktype is Token.Literal.String.Single:
-                strings.append(tokvalue)
-
-            elif toktype is Token.Operator.Word or toktype is Token.Operator:
-                operators.append(tokvalue)
-
-            elif toktype is Token.Punctuation:
-                punctuation.append(tokvalue)
-
-            elif toktype is Token.Literal.String.Doc:
-                docs_str.append(tokvalue)
-
-            elif toktype is Token.Comment.Single:
-                comments.append(tokvalue)
-
-            #print(f" {toktype} --> {repr(tokvalue)}  ")
-
-        return_dic = {
-            'variables': variables,
-            'strings': strings,
-            'operators': operators,
-            'punctuation': punctuation,
-            'docs_str': docs_str,
-            'commnets': comments,
-            'namespaces': namespaces,
-            'keywords': keywords,
-            'integers': integers,
-            'exceptions': exceptions,
-        }
-        return return_dic
+        check_dict = dict()
+        for toktype, tokvalue in self._tokens:
+            tok_id = self.genenate_id()
+            if not str(tokvalue) in list(check_dict.keys()):
+                check_dict[str(tokvalue)] = (tok_id, str(toktype))
+                self.TOKENS.append((tok_id, str(toktype), str(tokvalue)) )
+            else:
+                self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))       
+        del check_dict
+            #print(f"{toktype} --> {repr(tokvalue)}  ")
