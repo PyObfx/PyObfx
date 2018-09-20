@@ -20,10 +20,8 @@ def main():
 	args = cli_arg_parser()
 	pyfile = read_file(args['file'])
 	tokenizer = Tokenizer(pyfile)
-	for i in tokenizer.TOKENS:
-		print(i)
-	while True:
-		print(tokenizer.find_by_id(int(input('--> '))))
+	#for i in tokenizer.TOKENS:
+		#print(i)
 
 if __name__ == "__main__":
 	main()
