@@ -11,7 +11,7 @@ class Tokenizer:
     TOKENS = list()
     VARS = list()
     QUOTES = ["'", '"', '"""', "'''"]
-    BOOLS = ['True', 'False']
+    BOOLEAN = ['True', 'False']
 
     def __init__(self, data):
         def token_filter(tokens):
@@ -88,7 +88,7 @@ class Tokenizer:
                     int_vars[name] = int(self._tokens[key+2][1])
                 elif self._tokens[key+2][0] == Token.Literal.Number.Float: 
                     float_vars[name] = float(self._tokens[key+2][1])
-                elif self._tokens[key+2][0] == Token.Keyword.Constant and self._tokens[key+2][1] in self.BOOLS:
+                elif self._tokens[key+2][0] == Token.Keyword.Constant and self._tokens[key+2][1] in self.BOOLEAN:
                     bool_vars[name] = bool(self._tokens[key+2][1])
             self.VARS = [str_vars, int_vars, float_vars, bool_vars]
             #######
