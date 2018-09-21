@@ -50,7 +50,14 @@ class Obfuscator:
                     replace(string, obf_string_name), obf_string_name)
                 print(obf_string_name)
             # String Value Obfuscation
-                # obf_string_val = self._escape(''.join(chr(obfuscator(ord(c))) for c in string))
-        print(self.tokenizer.TOKENS)
+                # obf_string_ = self._escape(''.join(chr(obfuscator(ord(c))) for c in string))
+
+        self.save_obfuscated_file()
+
+    def save_obfuscated_file(self):
+        tokens = self.tokenizer.TOKENS
+        for token in tokens:
+            pass
+
     
     
