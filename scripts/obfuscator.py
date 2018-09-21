@@ -41,7 +41,5 @@ class Obfuscator:
             if self.obf_types[token[0]] == "string":
                 string = self.tokenizer.find_by_id(int(token[1]))[2]
                 obfuscated_string = self._escape(''.join(chr(obfuscator(ord(c))) for c in string))
-                print(obfuscated_string)
-
-
+                print(string, obfuscated_string)
     

@@ -8,6 +8,7 @@ from random import randint
 
 class Tokenizer:
     TOKENS = list()
+    VARS = list()
     QUOTES = ["'", '"', '"""', "'''"]
     BOOLS = ['True', 'False']
 
@@ -29,8 +30,31 @@ class Tokenizer:
         return self.TOKENS
 
     def get_variables(self): # str | int | float | bool
+       return self.VARS
+
+    def _generate_id(self): # Generate ID
+        while True:
+            tok_id = randint(0, 1000)
+            if tok_id in [i[0] for i in self.TOKENS]:
+                continue
+            return tok_id
+
+    def _tokenize(self):
+        check_dict = dict()
         str_vars, int_vars, float_vars, bool_vars = {}, {}, {}, {}
         for key, token in enumerate(self._tokens):
+            # TOKENS
+            toktype = self._tokens[key]
+            tok_id = self._generate_id()
+            tokvalue = token[1]
+            if not str(tokvalue) in list(check_dict.keys()):
+                check_dict[str(tokvalue)] = (tok_id, str(toktype))
+                self.TOKENS.append((tok_id, str(toktype), str(tokvalue)))
+            else:
+                self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))
+            #######
+
+            # VARS
             if token[0] == Token.Name and self._tokens[key+1] == (Token.Operator, '='):
                 name = token[1]
                 if (self._tokens[key+2][0] == Token.Literal.String.Double or \
@@ -49,22 +73,6 @@ class Tokenizer:
                     float_vars[name] = float(self._tokens[key+2][1])
                 elif self._tokens[key+2][0] == Token.Keyword.Constant and self._tokens[key+2][1] in self.BOOLS:
                     bool_vars[name] = bool(self._tokens[key+2][1])
-        return [str_vars, int_vars, float_vars, bool_vars]
-
-    def _generate_id(self):
-        while True:
-            tok_id = randint(0, 1000)
-            if tok_id in [i[0] for i in self.TOKENS]:
-                continue
-            return tok_id
-
-    def _tokenize(self):
-        check_dict = dict()
-        for toktype, tokvalue in self._tokens:
-            tok_id = self._generate_id()
-            if not str(tokvalue) in list(check_dict.keys()):
-                check_dict[str(tokvalue)] = (tok_id, str(toktype))
-                self.TOKENS.append((tok_id, str(toktype), str(tokvalue)))
-            else:
-                self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))       
+            self.VARS = [str_vars, int_vars, float_vars, bool_vars]
+            #######
         del check_dict
