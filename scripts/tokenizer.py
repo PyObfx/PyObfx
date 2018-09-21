@@ -13,8 +13,17 @@ class Tokenizer:
     BOOLS = ['True', 'False']
 
     def __init__(self, data):
+        def token_filter(tokens):
+            new_tokens = list()
+            for key, token in enumerate(tokens):
+                if tokens[key][0] == Token.Text and tokens[key][1] == ' ' and \
+                (tokens[key+1][1] == '=' or tokens[key-1][1] == '='): 
+                    pass
+                else:
+                    new_tokens.append(tokens[key])
+            return new_tokens
         self._tokens = Python3Lexer().get_tokens(data)
-        self._tokens = list(filter(lambda x: not (x[0] == Token.Text and x[1] == ' '), self._tokens)) # 
+        self._tokens = token_filter(list(self._tokens)) #list(filter(token_filter, self._tokens)) # 
         self._tokenize()
 
     def find_by_id(self, _id):
