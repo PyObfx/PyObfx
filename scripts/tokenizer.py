@@ -23,6 +23,12 @@ class Tokenizer:
                 return token
         return (None, None, None)
 
+    def find_index_by_id(self, _id):
+        for index, token in enumerate(self.TOKENS):
+            if self.TOKENS[index][0] == _id:
+                return index
+        return 0
+
     def get_next_token(self):
         return next(self._tokens)
 

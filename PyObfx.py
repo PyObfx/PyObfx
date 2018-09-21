@@ -4,7 +4,6 @@
 from scripts.io import read_file
 from scripts.argparser import cli_arg_parser
 from scripts.obfuscator import Obfuscator
-from scripts.strgen import StringGenerator
 
 # Show cool ascii art and project description
 desc = "PyObfx v1.0"

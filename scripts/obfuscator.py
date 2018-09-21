@@ -3,6 +3,7 @@
 
 import random
 from scripts.tokenizer import Tokenizer
+from scripts.strgen import StringGenerator
 
 class Obfuscator:
     def __init__(self, file_content):
@@ -16,6 +17,7 @@ class Obfuscator:
             3: "lambda n: n - sum({})".format(str(self.ints))
         }
         self.obf_types = {0:"string", 1:"int", 2:"float", 3:"bool"}
+        self.strgen = StringGenerator(1)
 
     string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)" # str.format with int deobfuscator name
     string_deobfuscator2 = lambda self, obfuscation: "lambda s: ''.join(chr(({})(ord(c))) for c in s)".format(self.deobfuscators[obfuscation])
@@ -39,7 +41,16 @@ class Obfuscator:
 
         for token in tokens:
             if self.obf_types[token[0]] == "string":
+            # String Name Obfuscation
                 string = self.tokenizer.find_by_id(int(token[1]))[2]
-                obfuscated_string = self._escape(''.join(chr(obfuscator(ord(c))) for c in string))
-                print(string, obfuscated_string)
+                obf_string_name = self.strgen.generate(len(string))
+                token_index = self.tokenizer.find_index_by_id(token[1])
+                current_token = self.tokens_all[token_index]
+                self.tokenizer.TOKENS[token_index] = (current_token[0], current_token[1]. \
+                    replace(string, obf_string_name), obf_string_name)
+                print(obf_string_name)
+            # String Value Obfuscation
+                # obf_string_val = self._escape(''.join(chr(obfuscator(ord(c))) for c in string))
+        print(self.tokenizer.TOKENS)
+    
     
