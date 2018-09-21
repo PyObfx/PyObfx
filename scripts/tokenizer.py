@@ -4,6 +4,7 @@
 from pygments.lexers import Python3Lexer
 from pygments.token import Token
 from random import randint
+import re
 
 
 class Tokenizer:
@@ -20,10 +21,11 @@ class Tokenizer:
                 (tokens[key+1][1] == '=' or tokens[key-1][1] == '='): 
                     pass
                 else:
-                    new_tokens.append(tokens[key])
+                    new_tokens.append((tokens[key][0], \
+                        re.sub('\t+', ' ', re.sub(' +', ' ', tokens[key][1]))))  # (?P<variable>.+)\s*=\s*(?P<value>.+)" # Use .strip here
             return new_tokens
         self._tokens = Python3Lexer().get_tokens(data)
-        self._tokens = token_filter(list(self._tokens)) #list(filter(token_filter, self._tokens)) # 
+        self._tokens = token_filter(token_filter(list(self._tokens))) # Avoid space char bug
         self._tokenize()
 
     def find_by_id(self, _id):
@@ -33,10 +35,11 @@ class Tokenizer:
         return (None, None, None)
 
     def find_index_by_id(self, _id):
+        index_list = list()
         for index, token in enumerate(self.TOKENS):
             if self.TOKENS[index][0] == _id:
-                return index
-        return 0
+                index_list.append(index)
+        return index_list
 
     def get_next_token(self):
         return next(self._tokens)
@@ -68,7 +71,6 @@ class Tokenizer:
             else:
                 self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))
             #######
-
             # VARS
             if token[0] == Token.Name and self._tokens[key+1] == (Token.Operator, '='):
                 name = token[1]
