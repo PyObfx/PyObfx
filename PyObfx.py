@@ -1,7 +1,6 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 
-from scripts.io import read_file
 from scripts.argparser import cli_arg_parser
 from scripts.obfuscator import Obfuscator
 
@@ -16,8 +15,7 @@ def print_header():
 def main():
 	print_header()
 	args = cli_arg_parser()
-	pyfile = read_file(args['file'])
-	obfuscator = Obfuscator(pyfile)
+	obfuscator = Obfuscator(args['file'])
 	obfuscator.obfuscate()
 
 if __name__ == "__main__":

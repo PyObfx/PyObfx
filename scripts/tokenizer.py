@@ -14,7 +14,7 @@ class Tokenizer:
 
     def __init__(self, data):
         self._tokens = Python3Lexer().get_tokens(data)
-        self._tokens = list(filter(lambda x: not (x[0] == Token.Text and x[1] == ' '), self._tokens))
+        self._tokens = list(filter(lambda x: not (x[0] == Token.Text and x[1] == ' '), self._tokens)) # 
         self._tokenize()
 
     def find_by_id(self, _id):
