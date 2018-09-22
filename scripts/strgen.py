@@ -20,14 +20,24 @@ class StringGenerator:
 		                5: self.chinese,
 		                6: self.hindi}
 		self.pyKeywords = __import__('keyword').kwlist
+
 	def __before__(self):
 		self.before = []
 
-	def generate(self, count):
+	def generateRandStr(self, length, max_length):
 		result = ""
-		for _ in range(count):
+		for _ in range(random.randint(length, max_length)):
 			result += random.choice(self.rndType[self.type])
 		if result in self.pyKeywords:
-			return self.generate(count)
+			return self.generateRandStr(length, max_length)
+		else:	
+			return result
+			
+	def generate(self, length):
+		result = ""
+		for _ in range(length):
+			result += random.choice(self.rndType[self.type])
+		if result in self.pyKeywords:
+			return self.generate(length)
 		else:	
 			return result
