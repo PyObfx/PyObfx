@@ -1,16 +1,20 @@
 # Obfuscated with PyObfx #
+JSBstGGm = lambda n: (n - (4 % 2)) - 2
+pkAfL = lambda s: ''.join(chr(JSBstGGm(ord(c))) for c in s)
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-aNyBviRgWynkbQWG="<- Test ->"
-KlgVRIAYuwqqGwkKimmyGyJhLzf="x"
-PAXFWvXpwxCcKWpTayBgmKrVs=9.9
-HHGrvXLbXbnxzgMGvsWLTYsNOjzabn=0
-LAMkiRahtnGcPVqRONRk=True
-xnZhrqlnWbctBx="Hi! "
+dIcCnhAlDpKbmoYDIGAnXYqfRqFTD=pkAfL(">/\"Vguv\"/@")
+ERxMpOVWEmFIiCsUqlAlUi=pkAfL("z")
+hQhbRTmLOkBIir=JSBstGGm(11.9)
+uFmyBYKhNqFkgvCTDbEUOrJ=JSBstGGm(2)
+NPEBzQyfIEIUYkZzdmZCxGYMJDTnVAH=bool(JSBstGGm(3))
+AiE=pkAfL("Jk#\"")
 
 def main():
- 
- print(xnZhrqlnWbctBx + " " + aNyBviRgWynkbQWG)
+ print(hQhbRTmLOkBIir)
+ print(uFmyBYKhNqFkgvCTDbEUOrJ)
+ print(NPEBzQyfIEIUYkZzdmZCxGYMJDTnVAH)
+ print(AiE + " " + dIcCnhAlDpKbmoYDIGAnXYqfRqFTD)
 
 if __name__ == "__main__":
  main()
