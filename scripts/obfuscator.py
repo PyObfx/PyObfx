@@ -56,17 +56,19 @@ class Obfuscator:
                     self.tokenizer.TOKENS[index] = (current_token[0], current_token[1].replace(string, obf_var_name), obf_var_name)
 
         variables = self.tokenizer.get_variables()
+        # Integer and Float Obfuscation
         for index, value in variables['integers'] + variables['floats']:
             current_token = self.tokenizer.TOKENS[index]
             obf_val = obfuscator(value)
             self.tokenizer.TOKENS[index] = (current_token[0], current_token[1], f'{self.deobfuscator_name}({obf_val})')
 
+        # Boolean Obfuscation
         for index, value in variables['booleans']:
             current_token = self.tokenizer.TOKENS[index]
             obf_val = obfuscator(value)
             self.tokenizer.TOKENS[index] = (current_token[0], current_token[1], f'bool({self.deobfuscator_name}({obf_val}))')
 
-
+        # String Obfuscation
         for indexes, string in variables['strings']:
             start = self.tokenizer.TOKENS[indexes[0]]
             self.tokenizer.TOKENS[indexes[0]] = (*start[:2], f'{self.str_deobfuscator_name}({start[2]}')
@@ -78,8 +80,17 @@ class Obfuscator:
         self.save_obfuscated_file()
 
     def save_obfuscated_file(self):
+        new_file_content = ''
+        for index, token in enumerate(self.tokenizer.TOKENS[:4]):
+            print(token)
+            if token[2].startswith('#') or token[2] == '\n':
+                print(token[2])
+                new_file_content += token[2]
+                self.tokenizer.TOKENS.pop(index)
+
         new_file_name = self.file_name.replace("."+self.file_name.split('.')[len(self.file_name.split('.'))-1], self.obfx_ext)
-        new_file_content = self.obfx_header + '\n';
+        new_file_content += self.obfx_header + '\n';
+        # Write deobfuscator functions
         new_file_content += f'{self.deobfuscator_name} = {self.deobfuscator}\n{self.str_deobfuscator_name} = {self.string_deobfuscator.format(self.deobfuscator_name)}\n'
         tokens = self.tokenizer.TOKENS
         for token in tokens:
