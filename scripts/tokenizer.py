@@ -59,7 +59,7 @@ class Tokenizer:
 
     def _tokenize(self):
         check_dict = dict()
-        str_vars, int_vars, float_vars, bool_vars = {}, {}, {}, {}
+        str_vars, int_vars, float_vars, bool_vars = [], [], [], []
         for key, token in enumerate(self._tokens):
             # TOKENS
             toktype = self._tokens[key]
@@ -78,18 +78,26 @@ class Tokenizer:
                     self._tokens[key+2][0] == Token.Literal.String.Single) and \
                     (self._tokens[key+2][1] in self.QUOTES):
                     text = ''
-                    for tok in self._tokens[key+3:]:
+                    keys = []
+                    keys.append(key+2)
+                    for k, tok in enumerate(self._tokens[key+3:]):
+                        keys.append(key+3+k)
                         if (tok[0] == Token.Literal.String.Double or tok[0] == Token.Literal.String.Single) \
                          and tok[1] in self.QUOTES:
-                            str_vars[name] = text
+                            str_vars.append((keys, text))
                             break
                         text += tok[1]
                 elif self._tokens[key+2][0] == Token.Literal.Number.Integer:
-                    int_vars[name] = int(self._tokens[key+2][1])
+                    int_vars.append((key+2, int(self._tokens[key+2][1])))
                 elif self._tokens[key+2][0] == Token.Literal.Number.Float: 
-                    float_vars[name] = float(self._tokens[key+2][1])
+                    float_vars.append((key+2, float(self._tokens[key+2][1])))
                 elif self._tokens[key+2][0] == Token.Keyword.Constant and self._tokens[key+2][1] in self.BOOLEAN:
-                    bool_vars[name] = bool(self._tokens[key+2][1])
-            self.VARS = [str_vars, int_vars, float_vars, bool_vars]
+                    bool_vars.append((key+2, bool(self._tokens[key+2][1])))
+            self.VARS = {
+                'strings': str_vars,
+                'integers': int_vars,
+                'floats': float_vars,
+                'booleans': bool_vars
+            }
             #######
         del check_dict
