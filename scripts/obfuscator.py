@@ -82,11 +82,9 @@ class Obfuscator:
     def save_obfuscated_file(self):
         new_file_content = ''
         for index, token in enumerate(self.tokenizer.TOKENS[:4]):
-            print(token)
             if token[2].startswith('#') or token[2] == '\n':
-                print(token[2])
                 new_file_content += token[2]
-                self.tokenizer.TOKENS.pop(index)
+                self.tokenizer.TOKENS.pop(0)
 
         new_file_name = self.file_name.replace("."+self.file_name.split('.')[len(self.file_name.split('.'))-1], self.obfx_ext)
         new_file_content += self.obfx_header + '\n';

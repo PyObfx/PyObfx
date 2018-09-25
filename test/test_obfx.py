@@ -1,22 +1,20 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # Obfuscated with PyObfx #
-fUcKoLS = lambda n: (n - (2 % 4)) - 2
-nFpSWHRcjj = lambda s: ''.join(chr(fUcKoLS(ord(c))) for c in s)
-
-
-=@1$Xiwx$1B")
-evVGPCrHofhMcbvOWBSL=nFpSWHRcjj("|")
-vBsWFIeFOmooNGHMM=fUcKoLS(13.9)
-MZSzkUbXRNbVkq=fUcKoLS(4)
-PfgyOVLojunZoFTeAKhbx=bool(fUcKoLS(5))
-JfWJ=nFpSWHRcjj("Lm%$")
+vv = lambda n: (n - (2 % 2)) - 3
+BcfLRw = lambda s: ''.join(chr(vv(ord(c))) for c in s)
+TnxRyTIxDUSX=BcfLRw("?0#Whvw#0A")
+GfrLnIqGCzYuO=BcfLRw("{")
+FhZratIDptSHPd=vv(12.9)
+zwaKukHnmaIlSd=vv(3)
+wlWwLmDhqEhXVhZlU=bool(vv(4))
+ntLETR=BcfLRw("Kl$#")
 
 def main():
- print(vBsWFIeFOmooNGHMM)
- print(MZSzkUbXRNbVkq)
- print(PfgyOVLojunZoFTeAKhbx)
- print(JfWJ + " " + BqMAiefwCCovKcD)
+ print(FhZratIDptSHPd)
+ print(zwaKukHnmaIlSd)
+ print(wlWwLmDhqEhXVhZlU)
+ print(ntLETR + " " + TnxRyTIxDUSX)
 
 if __name__ == "__main__":
  main()
