@@ -13,7 +13,7 @@ class Obfuscator:
         self.file_name = file_name
         self.file_content = read_file(file_name)
         self.tokenizer = Tokenizer(self.file_content)
-        self.tokens_all = self.tokenizer.get_tokens()
+        print(self.tokenizer.TOKENS)
         self.ints = [random.randint(1, 5) for _ in range(3)]
         self.deobfuscators = {
             1: "lambda n: (n - ({} % {})) - {}".format(*self.ints[::-1]),
@@ -52,7 +52,7 @@ class Obfuscator:
                 obf_var_name = self.strgen_for_variable.generateRandStr(len(string), len(string) * self.obf_len_constant)
                 token_index = self.tokenizer.find_index_by_id(token[1])
                 for index in token_index:
-                    current_token = self.tokens_all[index]
+                    current_token = self.tokenizer.TOKENS[index]
                     self.tokenizer.TOKENS[index] = (current_token[0], current_token[1].replace(string, obf_var_name), obf_var_name)
 
         variables = self.tokenizer.get_variables()
