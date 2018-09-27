@@ -13,7 +13,6 @@ class Obfuscator:
         self.file_name = file_name
         self.file_content = read_file(file_name)
         self.tokenizer = Tokenizer(self.file_content)
-        print(self.tokenizer.TOKENS)
         self.ints = [random.randint(1, 5) for _ in range(3)]
         self.deobfuscators = {
             1: "lambda n: (n - ({} % {})) - {}".format(*self.ints[::-1]),
