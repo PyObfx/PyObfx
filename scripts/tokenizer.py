@@ -66,8 +66,8 @@ class Tokenizer:
             tok_id = self._generate_id()
             tokvalue = token[1]
             if not str(tokvalue) in list(check_dict.keys()):
-                check_dict[str(tokvalue)] = (tok_id, str(toktype))
-                self.TOKENS.append((tok_id, str(toktype), str(tokvalue)))
+                check_dict[str(tokvalue)] = (tok_id, toktype)
+                self.TOKENS.append((tok_id, toktype, str(tokvalue)))
             else:
                 self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))
             #######
