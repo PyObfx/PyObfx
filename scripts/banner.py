@@ -9,12 +9,10 @@ banner1 = """
 | $$      |  $$$$$$$|  $$$$$$/| $$$$$$$/| $$      /$$/\  $$
 |__/       \____  $$ \______/ |_______/ |__/     |__/  \__/
            /$$  | $$                                       
-          |  $$$$$$/                                       
+v1.0      |  $$$$$$/  ~ https://github.com/PyObfx
            \______/     
-
-v1.0-dev        Github: https://github.com/PyObfx/PyObfx
-
 """
+
 banner2 = """
 
   _____        ____  _      __      
@@ -24,11 +22,9 @@ banner2 = """
  | |   | |_| | |__| | |_) | |  >  < 
  |_|    \__, |\____/|_.__/|_| /_/\_\\
          __/ |                      
-        |___/                       
-
-v1.0-dev        Github: https://github.com/PyObfx/PyObfx
-
+v1.0    |___/ ~ https://github.com/PyObfx
 """
+
 banner3 = """
 
 ██████╗ ██╗   ██╗ ██████╗ ██████╗ ███████╗██╗  ██╗
@@ -38,9 +34,10 @@ banner3 = """
 ██║        ██║   ╚██████╔╝██████╔╝██║     ██╔╝ ██╗
 ╚═╝        ╚═╝    ╚═════╝ ╚═════╝ ╚═╝     ╚═╝  ╚═╝
 
-v1.0-dev        Github: https://github.com/PyObfx/PyObfx
+v1.0                  ~ https://github.com/PyObfx
 
 """
+
 banner4 = """
 
 8888888b.            .d88888b.  888       .d888
@@ -52,13 +49,12 @@ banner4 = """
 888        Y88b 888 Y88b. .d88P 888 d88P 888    .d8""8b.
 888         "Y88888  "Y88888P"  88888P"  888    888  888
                 888
-           Y8b d88P
+v1-0       Y8b d88P  ~ https://github.com/PyObfx
             "Y88P"
-
-v1-0-dev        Github: https://github.com/PyObfx/PyObfx     
 """
-from random import choice
 
+from random import choice
+# Show random project banner
 def print_banner():
     banners = [banner1, banner2, banner3, banner4]
     print(choice(banners))
