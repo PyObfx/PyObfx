@@ -48,15 +48,21 @@ class Obfuscator:
         return s.replace('"', r'\"').replace("'", r"\'")
 
     def _obfuscate_var_names(self):
-        name_tokens = list()
+        # Iterate through the tokens and check if
+        # token type is Token.Name
         for token in self.tokenizer.get_tokens():
             if token[1][0] == Token.Name:
-                name_tokens.append(token[0])
-                string = self.tokenizer.find_by_id(int(token[0]))[2]
-                obf_var_name = self.strgen_for_variable.generateRandStr(len(string), len(string) * self.obf_len_constant)
+                # Get the name value
+                name_value = token[2]
+                # Obfuscate the name string
+                obf_var_name = self.strgen_for_variable.generateRandStr(len(name_value), len(name_value) * self.obf_len_constant)
+                # Find usages for current name with find_index_by_id method
                 token_index = self.tokenizer.find_index_by_id(token[0])
+                # Iterate through the indexes and change current value with
+                # new obfuscated value
                 for index in token_index:
                     current_token = self.tokenizer.TOKENS[index]
+                    # Change list element
                     self.tokenizer.TOKENS[index] = (current_token[0], (Token.Name, obf_var_name), obf_var_name)
                     
     def _obfuscate_var_values(self, obfuscator):
