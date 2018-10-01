@@ -1,20 +1,20 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # Obfuscated with PyObfx #
-vv = lambda n: (n - (2 % 2)) - 3
-BcfLRw = lambda s: ''.join(chr(vv(ord(c))) for c in s)
-TnxRyTIxDUSX=BcfLRw("?0#Whvw#0A")
-GfrLnIqGCzYuO=BcfLRw("{")
-FhZratIDptSHPd=vv(12.9)
-zwaKukHnmaIlSd=vv(3)
-wlWwLmDhqEhXVhZlU=bool(vv(4))
-ntLETR=BcfLRw("Kl$#")
+xeqWBQb = lambda n: (n - (1 % 3)) - 1
+eSHtjETlhC = lambda s: ''.join(chr(xeqWBQb(ord(c))) for c in s)
+kopkhPxqBItmVfHFFsWbgdUoRZD=eSHtjETlhC(">/\"Vguv\"/@")
+jNNOyeJtJbdMcAzmuWRwqaf=eSHtjETlhC("z")
+KkJjOpAcVFbasYpFZ=xeqWBQb(11.9)
+TLrwjLAxKXelNDXqhXFzQ=xeqWBQb(2)
+lHpYbbLqEBromXui=bool(xeqWBQb(3))
+oWirkIN=eSHtjETlhC("Jk#\"")
 
 def main():
- print(FhZratIDptSHPd)
- print(zwaKukHnmaIlSd)
- print(wlWwLmDhqEhXVhZlU)
- print(ntLETR + " " + TnxRyTIxDUSX)
+ print(KkJjOpAcVFbasYpFZ)
+ print(TLrwjLAxKXelNDXqhXFzQ)
+ print(lHpYbbLqEBromXui)
+ print(oWirkIN + " " + kopkhPxqBItmVfHFFsWbgdUoRZD)
 
 if __name__ == "__main__":
  main()

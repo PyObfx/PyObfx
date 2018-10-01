@@ -6,7 +6,6 @@ from pygments.token import Token
 from random import randint
 import re
 
-
 class Tokenizer:
     TOKENS = list()
     VARS = list()

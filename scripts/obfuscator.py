@@ -47,29 +47,19 @@ class Obfuscator:
     def _escape(self, s):
         return s.replace('"', r'\"').replace("'", r"\'")
 
-    def obfuscate(self, obfuscation=1):
-        obfuscators = {1: self.obfuscation1,
-                       2: self.obfuscation2,
-                       3: self.obfuscation3}
-        obfuscator = obfuscators[obfuscation]
-        self.deobfuscator = self.deobfuscators[obfuscation]
-        # Variable Name Obfuscation
+    def _obfuscate_var_names(self):
         name_tokens = list()
         for token in self.tokenizer.get_tokens():
-            if str(Token.Name)+"," in token[1]:
-                name_tokens.append((self.obf_types_rev['name'], token[0]))
-        for token in name_tokens:
-            if self.obf_types[token[0]] == 'name':
-                string = self.tokenizer.find_by_id(int(token[1]))[2]
-                obf_var_name = self.strgen_for_variable.generateRandStr(
-                    len(string), len(string) * self.obf_len_constant)
-                token_index = self.tokenizer.find_index_by_id(token[1])
+            if token[1][0] == Token.Name:
+                name_tokens.append(token[0])
+                string = self.tokenizer.find_by_id(int(token[0]))[2]
+                obf_var_name = self.strgen_for_variable.generateRandStr(len(string), len(string) * self.obf_len_constant)
+                token_index = self.tokenizer.find_index_by_id(token[0])
                 for index in token_index:
                     current_token = self.tokenizer.TOKENS[index]
-                    self.tokenizer.TOKENS[index] = (
-                        current_token[0], current_token[1]
-                        .replace(string, obf_var_name), obf_var_name)
-
+                    self.tokenizer.TOKENS[index] = (current_token[0], (Token.Name, obf_var_name), obf_var_name)
+                    
+    def _obfuscate_var_values(self, obfuscator):
         variables = self.tokenizer.get_variables()
 
         # Integer and Float Obfuscation
@@ -100,6 +90,16 @@ class Obfuscator:
             end = self.tokenizer.TOKENS[indexes[2]]
             self.tokenizer.TOKENS[indexes[2]] = (*end[:2], f'{end[2]})')
 
+
+    def obfuscate(self, obfuscation=1):
+        obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
+        obfuscator = obfuscators[obfuscation]
+        self.deobfuscator = self.deobfuscators[obfuscation]
+        # Variable Name Obfuscation
+        self._obfuscate_var_names()
+        # Variable Value Obfuscation
+        self._obfuscate_var_values(obfuscator)
+
         self.save_obfuscated_file()
 
     def save_obfuscated_file(self):
@@ -120,3 +120,4 @@ class Obfuscator:
             new_file_content += token[2]
         print(new_file_content)  # testing
         write_file(new_file_name, new_file_content)
+        print("Successfully obfuscated.\nSaved to: " + new_file_name)
