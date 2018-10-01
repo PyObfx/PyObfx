@@ -17,15 +17,19 @@ class Tokenizer:
             new_tokens = list()
             for key, token in enumerate(tokens):
                 if tokens[key][0] == Token.Text and tokens[key][1] == ' ' and \
-                        (tokens[key+1][1] == '=' or tokens[key-1][1] == '='):
+                        (tokens[key+1][1] == '=' or tokens[key-1][1] == '=') \
+                        and not tokens[key][1] == '    ':
                     pass
                 else:
-                    new_tokens.append((tokens[key][0],
-                                       re.sub('\t+', ' ', re.sub(' +', ' ', tokens[key][1]))))  # (?P<variable>.+)\s*=\s*(?P<value>.+)" # Use .strip here
+                    # (?P<variable>.+)\s*=\s*(?P<value>.+)" # Use .strip here
+                    # Don't change tabs
+                    new_tokens.append((tokens[key][0], 
+                                       re.sub(' +', ' ', 
+                                       re.sub('    ', '\t', tokens[key][1]))))  
             return new_tokens
         self._tokens = Python3Lexer().get_tokens(data)
-        self._tokens = token_filter(token_filter(
-            list(self._tokens)))  # Avoid space char bug
+        self._tokens = token_filter(
+            token_filter(list(self._tokens)))  # Avoid space char bug
         self._tokenize()
 
     def find_by_id(self, _id):

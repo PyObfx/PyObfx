@@ -1,20 +1,23 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # Obfuscated with PyObfx #
-ltVZkNM = lambda n: (n - (5 % 3)) - 3
-QdCokCLNk = lambda s: ''.join(chr(ltVZkNM(ord(c))) for c in s)
-UrhSrhVlQgCAcKZo=QdCokCLNk("A2%Yjxy%2C")
-gXNxCkLBMuJFGIUJCi=QdCokCLNk("}")
-vzLMtMuqJwqOTkjVnKtEAz=ltVZkNM(14.9)
-PRmICGONLaVhpeIMbeAgnaAIX=ltVZkNM(5)
-eijynrrQqRcgHWIhcZYSjvE=bool(ltVZkNM(6))
-zmaKq=QdCokCLNk("Mn&%")
+mvQYOXOvLC = lambda n: (n - (1 % 3)) - 3
+yqzWnN = lambda s: ''.join(chr(mvQYOXOvLC(ord(c))) for c in s)
+PEgwERnWNnqIjzSZBgs=yqzWnN("@1$Xiwx$1B")
+COBINPeNCijykDzFGbhjCun=yqzWnN("|")
+HsHwioXpjbZznczOs=mvQYOXOvLC(13.9)
+ykqqHuHwRK=mvQYOXOvLC(4)
+JhjdAeloaDLDJLSK=bool(mvQYOXOvLC(5))
+UuCH=yqzWnN("Lm%$")
 
 def main():
- print(vzLMtMuqJwqOTkjVnKtEAz)
- print(PRmICGONLaVhpeIMbeAgnaAIX)
- print(eijynrrQqRcgHWIhcZYSjvE)
- print(zmaKq + " " + UrhSrhVlQgCAcKZo)
+	print(HsHwioXpjbZznczOs)
+	print(ykqqHuHwRK)
+	print(JhjdAeloaDLDJLSK)
+	print(UuCH + " " + PEgwERnWNnqIjzSZBgs)
+	def awesome():
+		print("awesome")
+	awesome()
 
 if __name__ == "__main__":
- main()
+	main()

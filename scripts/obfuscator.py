@@ -98,32 +98,36 @@ class Obfuscator:
 
 
     def obfuscate(self, obfuscation=1):
+        # Declare obfuscator
         obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
+        # Select obfuscator
         obfuscator = obfuscators[obfuscation]
         self.deobfuscator = self.deobfuscators[obfuscation]
         # Variable Name Obfuscation
         self._obfuscate_var_names()
         # Variable Value Obfuscation
         self._obfuscate_var_values(obfuscator)
-
+        # Save file
         self.save_obfuscated_file()
 
     def save_obfuscated_file(self):
         new_file_content = ''
+        # Shebang check & fix
         for index, token in enumerate(self.tokenizer.TOKENS[:4]):
             if token[2].startswith('#') or token[2] == '\n':
                 new_file_content += token[2]
                 self.tokenizer.TOKENS.pop(0)
-
+        # New file name
         new_file_name = self.file_name.replace(
             "." + self.file_name.split('.')[len(self.file_name.split('.'))-1],
             self.obfx_ext)
+        # Add header
         new_file_content += self.obfx_header + '\n'
         # Write deobfuscator functions
         new_file_content += f'{self.deobfuscator_name} = {self.deobfuscator}\n{self.str_deobfuscator_name} = {self.string_deobfuscator.format(self.deobfuscator_name)}\n'
-        tokens = self.tokenizer.TOKENS
-        for token in tokens:
+        # Write new file 
+        for token in self.tokenizer.TOKENS:
             new_file_content += token[2]
-        print(new_file_content)  # testing
         write_file(new_file_name, new_file_content)
         print("Successfully obfuscated.\nSaved to: " + new_file_name)
+        print(new_file_content)  # testing
