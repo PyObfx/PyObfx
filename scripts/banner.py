@@ -59,7 +59,10 @@ v1-0-dev        Github: https://github.com/PyObfx/PyObfx
 """
 from random import choice
 
+
 def print_banner():
+    """
+    Chooses random banner from provided banners above
+    """
     banners = [banner1, banner2, banner3, banner4]
     print(choice(banners))
-

@@ -17,6 +17,7 @@ def read_file(filename):
         data = file.read()
     return data
 
+
 def write_file(filename, content):
     if os.path.splitext(filename)[1] != '.py':
         raise FileTypeException('Only Python(.py) file.')

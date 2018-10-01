@@ -18,14 +18,15 @@ class Tokenizer:
             new_tokens = list()
             for key, token in enumerate(tokens):
                 if tokens[key][0] == Token.Text and tokens[key][1] == ' ' and \
-                (tokens[key+1][1] == '=' or tokens[key-1][1] == '='): 
+                        (tokens[key+1][1] == '=' or tokens[key-1][1] == '='):
                     pass
                 else:
-                    new_tokens.append((tokens[key][0], \
-                        re.sub('\t+', ' ', re.sub(' +', ' ', tokens[key][1]))))  # (?P<variable>.+)\s*=\s*(?P<value>.+)" # Use .strip here
+                    new_tokens.append((tokens[key][0],
+                                       re.sub('\t+', ' ', re.sub(' +', ' ', tokens[key][1]))))  # (?P<variable>.+)\s*=\s*(?P<value>.+)" # Use .strip here
             return new_tokens
         self._tokens = Python3Lexer().get_tokens(data)
-        self._tokens = token_filter(token_filter(list(self._tokens))) # Avoid space char bug
+        self._tokens = token_filter(token_filter(
+            list(self._tokens)))  # Avoid space char bug
         self._tokenize()
 
     def find_by_id(self, _id):
@@ -47,10 +48,10 @@ class Tokenizer:
     def get_tokens(self):
         return self.TOKENS
 
-    def get_variables(self): # str | int | float | bool
-       return self.VARS
+    def get_variables(self):  # str | int | float | bool
+        return self.VARS
 
-    def _generate_id(self): # Generate ID
+    def _generate_id(self):  # Generate ID
         while True:
             tok_id = randint(0, 1000)
             if tok_id in [i[0] for i in self.TOKENS]:
@@ -69,27 +70,28 @@ class Tokenizer:
                 check_dict[str(tokvalue)] = (tok_id, toktype)
                 self.TOKENS.append((tok_id, toktype, str(tokvalue)))
             else:
-                self.TOKENS.append((check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))
+                self.TOKENS.append(
+                    (check_dict[tokvalue][0], check_dict[tokvalue][1], str(tokvalue)))
             #######
             # VARS
             if token[0] == Token.Name and self._tokens[key+1] == (Token.Operator, '='):
                 name = token[1]
-                if (self._tokens[key+2][0] == Token.Literal.String.Double or \
-                    self._tokens[key+2][0] == Token.Literal.String.Single) and \
-                    (self._tokens[key+2][1] in self.QUOTES):
+                if (self._tokens[key+2][0] == Token.Literal.String.Double or
+                        self._tokens[key+2][0] == Token.Literal.String.Single) and \
+                        (self._tokens[key+2][1] in self.QUOTES):
                     text = ''
                     keys = []
                     keys.append(key+2)
                     for k, tok in enumerate(self._tokens[key+3:]):
                         keys.append(key+3+k)
                         if (tok[0] == Token.Literal.String.Double or tok[0] == Token.Literal.String.Single) \
-                         and tok[1] in self.QUOTES:
+                                and tok[1] in self.QUOTES:
                             str_vars.append((keys, text))
                             break
                         text += tok[1]
                 elif self._tokens[key+2][0] == Token.Literal.Number.Integer:
                     int_vars.append((key+2, int(self._tokens[key+2][1])))
-                elif self._tokens[key+2][0] == Token.Literal.Number.Float: 
+                elif self._tokens[key+2][0] == Token.Literal.Number.Float:
                     float_vars.append((key+2, float(self._tokens[key+2][1])))
                 elif self._tokens[key+2][0] == Token.Keyword.Constant and self._tokens[key+2][1] in self.BOOLEAN:
                     bool_vars.append((key+2, bool(self._tokens[key+2][1])))
