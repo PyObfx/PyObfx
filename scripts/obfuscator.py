@@ -7,6 +7,7 @@ from scripts.strgen import StringGenerator
 from pygments.token import Token
 from scripts.io import read_file, write_file
 
+
 class Obfuscator:
     def __init__(self, file_name):
         self.obfx_header = "# Obfuscated with PyObfx #"
@@ -20,16 +21,28 @@ class Obfuscator:
             3: "lambda n: n - sum({})".format(str(self.ints))
         }
         self.obf_len_constant = 2
+        self.obf_types = {0: "name", 1: "val", 2: "func"}
+        self.obf_types_rev = {"name": 0, "val": 1, "func": 2}
         self.strgen_for_variable = StringGenerator(1)
         self.obfx_ext = "_obfx.py"
-        self.deobfuscator_name = self.strgen_for_variable.generateRandStr(2, 10)
-        self.str_deobfuscator_name = self.strgen_for_variable.generateRandStr(2, 10)
+        self.deobfuscator_name = self.strgen_for_variable.generateRandStr(
+            2, 10)
+        self.str_deobfuscator_name = self.strgen_for_variable.generateRandStr(
+            2, 10)
 
-    string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)" # str.format with int deobfuscator name
-    string_deobfuscator2 = lambda self, obfuscation: "lambda s: ''.join(chr(({})(ord(c))) for c in s)".format(self.deobfuscators[obfuscation])
-    obfuscation1 = lambda self, n: (n + self.ints[0]) + (self.ints[2] % self.ints[1])
-    obfuscation2 = lambda self, n: (n * self.ints[1]) ^ self.ints[0]
-    obfuscation3 = lambda self, n: n + sum(self.ints)
+    # str.format with int deobfuscator name
+    string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
+
+    def string_deobfuscator2(self, obfuscation):
+        return "lambda s: ''.join(chr(({})(ord(c))) for c in s)".format(
+            self.deobfuscators[obfuscation])
+
+    def obfuscation1(self, n):
+        return (n + self.ints[0]) + (self.ints[2] % self.ints[1])
+
+    def obfuscation2(self, n): return (n * self.ints[1]) ^ self.ints[0]
+
+    def obfuscation3(self, n): return n + sum(self.ints)
 
     def _escape(self, s):
         return s.replace('"', r'\"').replace("'", r"\'")
@@ -45,27 +58,35 @@ class Obfuscator:
                 for index in token_index:
                     current_token = self.tokenizer.TOKENS[index]
                     self.tokenizer.TOKENS[index] = (current_token[0], (Token.Name, obf_var_name), obf_var_name)
-
+                    
     def _obfuscate_var_values(self, obfuscator):
         variables = self.tokenizer.get_variables()
+
         # Integer and Float Obfuscation
         for index, value in variables['integers'] + variables['floats']:
             current_token = self.tokenizer.TOKENS[index]
             obf_val = obfuscator(value)
-            self.tokenizer.TOKENS[index] = (current_token[0], current_token[1], f'{self.deobfuscator_name}({obf_val})')
+            self.tokenizer.TOKENS[index] = (
+                current_token[0], current_token[1],
+                f'{self.deobfuscator_name}({obf_val})')
 
         # Boolean Obfuscation
         for index, value in variables['booleans']:
             current_token = self.tokenizer.TOKENS[index]
             obf_val = obfuscator(value)
-            self.tokenizer.TOKENS[index] = (current_token[0], current_token[1], f'bool({self.deobfuscator_name}({obf_val}))')
+            self.tokenizer.TOKENS[index] = (
+                current_token[0], current_token[1],
+                f'bool({self.deobfuscator_name}({obf_val}))')
 
         # String Obfuscation
         for indexes, string in variables['strings']:
             start = self.tokenizer.TOKENS[indexes[0]]
-            self.tokenizer.TOKENS[indexes[0]] = (*start[:2], f'{self.str_deobfuscator_name}({start[2]}')
-            obf_string = self._escape(''.join(chr(obfuscator(ord(c))) for c in string))
-            self.tokenizer.TOKENS[indexes[1]] = (*self.tokenizer.TOKENS[indexes[1]][:2], obf_string)
+            self.tokenizer.TOKENS[indexes[0]] = (
+                *start[:2], f'{self.str_deobfuscator_name}({start[2]}')
+            obf_string = self._escape(
+                ''.join(chr(obfuscator(ord(c))) for c in string))
+            self.tokenizer.TOKENS[indexes[1]] = (
+                *self.tokenizer.TOKENS[indexes[1]][:2], obf_string)
             end = self.tokenizer.TOKENS[indexes[2]]
             self.tokenizer.TOKENS[indexes[2]] = (*end[:2], f'{end[2]})')
 
@@ -88,14 +109,15 @@ class Obfuscator:
                 new_file_content += token[2]
                 self.tokenizer.TOKENS.pop(0)
 
-        new_file_name = self.file_name.replace("."+self.file_name.split('.')[len(self.file_name.split('.'))-1], self.obfx_ext)
-        new_file_content += self.obfx_header + '\n';
+        new_file_name = self.file_name.replace(
+            "." + self.file_name.split('.')[len(self.file_name.split('.'))-1],
+            self.obfx_ext)
+        new_file_content += self.obfx_header + '\n'
         # Write deobfuscator functions
         new_file_content += f'{self.deobfuscator_name} = {self.deobfuscator}\n{self.str_deobfuscator_name} = {self.string_deobfuscator.format(self.deobfuscator_name)}\n'
         tokens = self.tokenizer.TOKENS
         for token in tokens:
             new_file_content += token[2]
-        print(new_file_content) # testing
+        print(new_file_content)  # testing
         write_file(new_file_name, new_file_content)
         print("Successfully obfuscated.\nSaved to: " + new_file_name)
-

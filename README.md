@@ -1,2 +1,7 @@
 # PyObfx
-Python3 Obfuscator
+Python Obfuscation tool.
+
+# How to Install
+```
+pip install -r requirements.txt
+```

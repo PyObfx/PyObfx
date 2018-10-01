@@ -54,8 +54,10 @@ v1-0       Y8b d88P  ~ https://github.com/PyObfx
 """
 
 from random import choice
-# Show random project banner
+
 def print_banner():
+    """
+    Chooses random banner from provided banners above
+    """
     banners = [banner1, banner2, banner3, banner4]
     print(choice(banners))
-
