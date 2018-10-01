@@ -13,7 +13,7 @@ def main():
     print(test_bool)
     print(hi + " " + test_str)
     def awesome():
-    	print("awesome")
+    	print("awesome1")
     awesome()
 
 if __name__ == "__main__":

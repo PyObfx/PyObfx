@@ -47,11 +47,11 @@ class Obfuscator:
     def _escape(self, s):
         return s.replace('"', r'\"').replace("'", r"\'")
 
-    def _obfuscate_var_names(self):
+    def _obfuscate_names(self, token_type):
         # Iterate through the tokens and check if
         # token type is Token.Name
         for token in self.tokenizer.get_tokens():
-            if token[1][0] == Token.Name:
+            if token[1][0] == token_type:
                 # Get the name value
                 name_value = token[2]
                 # Obfuscate the name string
@@ -96,7 +96,6 @@ class Obfuscator:
             end = self.tokenizer.TOKENS[indexes[2]]
             self.tokenizer.TOKENS[indexes[2]] = (*end[:2], f'{end[2]})')
 
-
     def obfuscate(self, obfuscation=1):
         # Declare obfuscator
         obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
@@ -104,11 +103,14 @@ class Obfuscator:
         obfuscator = obfuscators[obfuscation]
         self.deobfuscator = self.deobfuscators[obfuscation]
         # Variable Name Obfuscation
-        self._obfuscate_var_names()
+        self._obfuscate_names(Token.Name)
+        # Function Name Obfuscation
+        self._obfuscate_names(Token.Name.Function)
         # Variable Value Obfuscation
         self._obfuscate_var_values(obfuscator)
         # Save file
         self.save_obfuscated_file()
+
 
     def save_obfuscated_file(self):
         new_file_content = ''
