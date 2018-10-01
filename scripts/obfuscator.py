@@ -33,11 +33,12 @@ class Obfuscator:
     # str.format with int deobfuscator name
     string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
 
-    def string_deobfuscator2(self, obfuscation): return "lambda s: ''.join(chr(({})(ord(c))) for c in s)".format(
-        self.deobfuscators[obfuscation])
+    def string_deobfuscator2(self, obfuscation):
+        return "lambda s: ''.join(chr(({})(ord(c))) for c in s)".format(
+            self.deobfuscators[obfuscation])
 
-    def obfuscation1(self, n): return (
-        n + self.ints[0]) + (self.ints[2] % self.ints[1])
+    def obfuscation1(self, n):
+        return (n + self.ints[0]) + (self.ints[2] % self.ints[1])
 
     def obfuscation2(self, n): return (n * self.ints[1]) ^ self.ints[0]
 
@@ -48,7 +49,8 @@ class Obfuscator:
 
     def obfuscate(self, obfuscation=1):
         obfuscators = {1: self.obfuscation1,
-                       2: self.obfuscation2, 3: self.obfuscation3}
+                       2: self.obfuscation2,
+                       3: self.obfuscation3}
         obfuscator = obfuscators[obfuscation]
         self.deobfuscator = self.deobfuscators[obfuscation]
         # Variable Name Obfuscation
@@ -65,22 +67,26 @@ class Obfuscator:
                 for index in token_index:
                     current_token = self.tokenizer.TOKENS[index]
                     self.tokenizer.TOKENS[index] = (
-                        current_token[0], current_token[1].replace(string, obf_var_name), obf_var_name)
+                        current_token[0], current_token[1]
+                        .replace(string, obf_var_name), obf_var_name)
 
         variables = self.tokenizer.get_variables()
+
         # Integer and Float Obfuscation
         for index, value in variables['integers'] + variables['floats']:
             current_token = self.tokenizer.TOKENS[index]
             obf_val = obfuscator(value)
             self.tokenizer.TOKENS[index] = (
-                current_token[0], current_token[1], f'{self.deobfuscator_name}({obf_val})')
+                current_token[0], current_token[1],
+                f'{self.deobfuscator_name}({obf_val})')
 
         # Boolean Obfuscation
         for index, value in variables['booleans']:
             current_token = self.tokenizer.TOKENS[index]
             obf_val = obfuscator(value)
             self.tokenizer.TOKENS[index] = (
-                current_token[0], current_token[1], f'bool({self.deobfuscator_name}({obf_val}))')
+                current_token[0], current_token[1],
+                f'bool({self.deobfuscator_name}({obf_val}))')
 
         # String Obfuscation
         for indexes, string in variables['strings']:
@@ -104,7 +110,8 @@ class Obfuscator:
                 self.tokenizer.TOKENS.pop(0)
 
         new_file_name = self.file_name.replace(
-            "."+self.file_name.split('.')[len(self.file_name.split('.'))-1], self.obfx_ext)
+            "." + self.file_name.split('.')[len(self.file_name.split('.'))-1],
+            self.obfx_ext)
         new_file_content += self.obfx_header + '\n'
         # Write deobfuscator functions
         new_file_content += f'{self.deobfuscator_name} = {self.deobfuscator}\n{self.str_deobfuscator_name} = {self.string_deobfuscator.format(self.deobfuscator_name)}\n'
