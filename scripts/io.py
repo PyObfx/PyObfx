@@ -1,14 +1,11 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-import os
-
-#BASEDIR  = os.path.dirname(os.path.realpath(__file__))
-
+import os, io
 
 class FileTypeException(Exception):
     pass
 
-
+# Read file
 def read_file(filename):
     if os.path.splitext(filename)[1] != '.py':
         raise FileTypeException("Only Python(.py) file.")
@@ -17,9 +14,10 @@ def read_file(filename):
         data = file.read()
     return data
 
+# Write file
 def write_file(filename, content):
     if os.path.splitext(filename)[1] != '.py':
         raise FileTypeException('Only Python(.py) file.')
-
-    with open(filename, 'w') as file:
+    # Avoid charmap and encoding issues
+    with io.open(filename, "w", encoding="utf-8") as file:
         file.write(content)
