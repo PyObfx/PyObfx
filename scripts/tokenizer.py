@@ -1,10 +1,9 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-
+import re
 from pygments.lexers import Python3Lexer
 from pygments.token import Token
 from random import randint
-import re
 
 class Tokenizer:
     TOKENS = list()
