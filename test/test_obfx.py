@@ -1,23 +1,23 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # Obfuscated with PyObfx #
-AClN = lambda n: (n - (5 % 1)) - 4
-IDIFtBMVht = lambda s: ''.join(chr(AClN(ord(c))) for c in s)
-TUQakqNhmzqtsxbGfMwmowln=IDIFtBMVht("@1$Xiwx$1B")
-QFXHdkRAKwdjZIrKcmCdLQgoXC=IDIFtBMVht("|")
-UIGqxFCDlpZkcDj=AClN(13.9)
-kytMsdgwgqBvWcQWHKVQeEe=AClN(4)
-EmkZIyulAxwMccxGSBfA=bool(AClN(5))
-KJVGk=IDIFtBMVht("Lm%$")
+UHZdZ = lambda n: (n - (3 % 4)) - 1
+cqENvhgstz = lambda s: ''.join(chr(UHZdZ(ord(c))) for c in s)
+UhEPFaeuNERrVmAAS=cqENvhgstz("@1$Xiwx$1B")
+RZrTtmMUjdgciRHWjLWjAbtoK=cqENvhgstz("|")
+erYamViODXeIxjQXPvmhNviVS=UHZdZ(13.9)
+KnGCUiZMBUVdGuigMJj=UHZdZ(4)
+rWjDDRlMvHIm=bool(UHZdZ(5))
+kDc=cqENvhgstz("Lm%$")
 
-def pjtIkJsc():
-	print(UIGqxFCDlpZkcDj)
-	print(kytMsdgwgqBvWcQWHKVQeEe)
-	print(EmkZIyulAxwMccxGSBfA)
-	print(KJVGk + " " + TUQakqNhmzqtsxbGfMwmowln)
-	def ZCBpwRwq():
+def JWQoLPN():
+	print(erYamViODXeIxjQXPvmhNviVS)
+	print(KnGCUiZMBUVdGuigMJj)
+	print(rWjDDRlMvHIm)
+	print(kDc + " " + UhEPFaeuNERrVmAAS)
+	def uukhzKQ():
 		print("awesome")
-	ZCBpwRwq()
+	uukhzKQ()
 
 if __name__ == "__main__":
-	pjtIkJsc()
+	JWQoLPN()
