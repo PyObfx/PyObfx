@@ -69,6 +69,10 @@ class Tokenizer:
             toktype = self._tokens[key]
             tok_id = self._generate_id()
             tokvalue = token[1]
+            # Check if function.name token is a string
+            if token[0] == Token.Literal.String.Double or token[0] == Token.Literal.String.Single:
+                self.TOKENS.append((tok_id, toktype, str(tokvalue)))
+                continue
             if not str(tokvalue) in list(check_dict.keys()):
                 check_dict[str(tokvalue)] = (tok_id, toktype)
                 self.TOKENS.append((tok_id, toktype, str(tokvalue)))
