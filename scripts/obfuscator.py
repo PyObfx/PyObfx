@@ -26,6 +26,8 @@ class Obfuscator:
         }
         # Length constant for random string
         self.obf_len_constant = 2
+        # Quote character distance from string (max)
+        self.quote_dist_constant = 5
         # String generator
         self.strgen_for_variable = StringGenerator(1)
         # New file extension for obfuscated file
@@ -132,7 +134,7 @@ class Obfuscator:
                     self.tokenizer.TOKENS[index] = (token[0], (Token.Name, obf_string), obf_string)
                     # Pop unnecessary escape characters
                     # (eg.: print("deobf("test")") -> Quote is unnecessary)
-                    for n_index in range(5):
+                    for n_index in range(self.quote_dist_constant):
                         if self.tokenizer.TOKENS[index-n_index][2] in self.tokenizer.QUOTES:
                             self.tokenizer.TOKENS.pop(index-n_index)
                             self.tokenizer.TOKENS.pop(index)
