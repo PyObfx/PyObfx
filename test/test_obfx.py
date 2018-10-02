@@ -1,23 +1,23 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # Obfuscated with PyObfx #
-fClkijXq = lambda n: (n - (4 % 5)) - 3
-Rlsg = lambda s: ''.join(chr(fClkijXq(ord(c))) for c in s)
-ujxkBNCDSyPNgeoBL=Rlsg("C4\'[lz{\'4E")
-kQSjkOkUWtCWIvOLgJVYaGfmIY=Rlsg("")
-wPRCrwpXmeivYLHrZVsf=fClkijXq(16.9)
-rtPwUviPWfq=fClkijXq(7)
-kkNUIcetOhiMdSE=bool(fClkijXq(8))
-smDBIk=Rlsg("Op(\'")
+DkkMpfn = lambda n: (n - (5 % 4)) - 4
+wLHjUoBepz = lambda s: ''.join(chr(DkkMpfn(ord(c))) for c in s)
+dWjSZQobMMopeopErpfY=wLHjUoBepz("A2%Yjxy%2C")
+qjUiMrWABsQOJOnjizDtVfGSzV=wLHjUoBepz("}")
+CdSKJwnZYJOakCutCg=DkkMpfn(14.9)
+dnruOpPwGabwClRePBA=DkkMpfn(5)
+pXLQtdzxOLOceaIJP=bool(DkkMpfn(6))
+dQxaaD=wLHjUoBepz("Mn&%")
 
-def bbXZcJs():
-	print(wPRCrwpXmeivYLHrZVsf)
-	print(rtPwUviPWfq)
-	print(kkNUIcetOhiMdSE)
-	print(smDBIk + " " + ujxkBNCDSyPNgeoBL)
-	def bcJwOKKcR():
+def WOACRxtQ():
+	print(CdSKJwnZYJOakCutCg)
+	print(dnruOpPwGabwClRePBA)
+	print(pXLQtdzxOLOceaIJP)
+	print(dQxaaD + " " + dWjSZQobMMopeopErpfY)
+	def yoZxlOTFzHN():
 		print("awesome")
-	bcJwOKKcR()
+	yoZxlOTFzHN()
 
 if __name__ == "__main__":
-	bbXZcJs()
+	WOACRxtQ()
