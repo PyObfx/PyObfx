@@ -53,11 +53,25 @@ v1-0       Y8b d88P  ~ https://github.com/PyObfx
             "Y88P"
 """
 
+banner5 = """
+ ██▓███ ▓██   ██▓ ▒█████   ▄▄▄▄     █████▒▒██   ██▒
+▓██░  ██▒▒██  ██▒▒██▒  ██▒▓█████▄ ▓██   ▒ ▒▒ █ █ ▒░
+▓██░ ██▓▒ ▒██ ██░▒██░  ██▒▒██▒ ▄██▒████ ░ ░░  █   ░
+▒██▄█▓▒ ▒ ░ ▐██▓░▒██   ██░▒██░█▀  ░▓█▒  ░  ░ █ █ ▒ 
+▒██▒ ░  ░ ░ ██▒▓░░ ████▓▒░░▓█  ▀█▓░▒█░    ▒██▒ ▒██▒
+▒▓▒░ ░  ░  ██▒▒▒ ░ ▒░▒░▒░ ░▒▓███▀▒ ▒ ░    ▒▒ ░ ░▓ ░
+░▒ ░     ▓██ ░▒░   ░ ▒ ▒░ ▒░▒   ░  ░      ░░   ░▒ ░
+░░       ▒ ▒ ░░  ░ ░ ░ ▒   ░    ░  ░ ░     ░    ░  
+         ░ ░         ░ ░   ░               ░    ░  
+         ░ ░                    ░                  
+v1.0                    ~ https://github.com/PyObfx
+"""
+
 from random import choice
 
 def print_banner():
     """
     Chooses random banner from provided banners above
     """
-    banners = [banner1, banner2, banner3, banner4]
+    banners = [banner1, banner2, banner3, banner4, banner5]
     print(choice(banners))
