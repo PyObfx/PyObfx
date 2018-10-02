@@ -52,7 +52,7 @@ class Obfuscator:
     def _obfuscate_names(self, token_type):
         # Iterate through the tokens and check if
         # token type is Token.Name
-        for token in self.tokenizer.get_tokens():
+        for token in self.tokenizer.TOKENS:
             if token[1][0] == token_type:
                 # Get the name value
                 name_value = token[2]
@@ -95,19 +95,47 @@ class Obfuscator:
 
         # String Obfuscation
         for indexes, string in variables['strings']:
-             # Get string
+            # Get first quote
             start = self.tokenizer.TOKENS[indexes[0]]
-            # Change left side of string equation
+            # Change quote with obfuscator method
             self.tokenizer.TOKENS[indexes[0]] = (
                 *start[:2], f'{self.str_deobfuscator_name}({start[2]}')
             # Obfuscate string value
             obf_string = self._escape(
                 ''.join(chr(obfuscator(ord(c))) for c in string))
-            # Change right side of string equation
+            # Change last quote with parentheses and update token list
             self.tokenizer.TOKENS[indexes[1]] = (
                 *self.tokenizer.TOKENS[indexes[1]][:2], obf_string)
             end = self.tokenizer.TOKENS[indexes[2]]
             self.tokenizer.TOKENS[indexes[2]] = (*end[:2], f'{end[2]})')
+
+        # Function Strings Obfuscation
+        for index, string in variables['strings_func']:
+            # Get token
+            current_token = self.tokenizer.find_by_id(index)
+            # Check if string is changed before.
+            # Some function strings and normal strings have
+            # same types. So, if condition is necessary. 
+            # If value of current token changed before,
+            # it is not the string we are looking for.
+            if string == current_token[2]:
+                # Obfuscate the string
+                # (eg.: <deobfuscator_name>('<obfuscated_string>'))
+                obf_string = self.str_deobfuscator_name + "(\"" + self._escape(
+                ''.join(chr(obfuscator(ord(c))) for c in string)) + "\")"
+                # Find usages for current token with find_index_by_id method
+                token_index = self.tokenizer.find_index_by_id(current_token[0])
+                # Iterate through the indexes and change current value with
+                # new obfuscated value
+                for index in token_index:
+                    token = self.tokenizer.TOKENS[index]
+                    self.tokenizer.TOKENS[index] = (token[0], (Token.Name, obf_string), obf_string)
+                    # Pop unnecessary escape characters
+                    # (eg.: print("deobf("test")") -> Quote is unnecessary)
+                    for n_index in range(5):
+                        if self.tokenizer.TOKENS[index-n_index][2] in self.tokenizer.QUOTES:
+                            self.tokenizer.TOKENS.pop(index-n_index)
+                            self.tokenizer.TOKENS.pop(index)
 
     def obfuscate(self, obfuscation=1):
         # Declare obfuscator

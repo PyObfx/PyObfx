@@ -14,6 +14,7 @@ def main():
     print(hi + " " + test_str)
     def awesome():
     	print("awesome")
+    	print("is this really working?" + " oh, it is.")
     awesome()
 
 if __name__ == "__main__":

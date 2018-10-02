@@ -56,10 +56,6 @@ class Tokenizer:
     def get_next_token(self):
         return next(self._tokens)
 
-    # Return all tokens
-    def get_tokens(self):
-        return self.TOKENS
-
     # Return parsed variable dict
     def get_variables(self):  # str | int | float | bool
         return self.VARS
@@ -78,7 +74,7 @@ class Tokenizer:
         # and assigning unique ID for every token
         check_dict = dict()
         # Create lists for every variable type
-        str_vars, int_vars, float_vars, bool_vars = [], [], [], []
+        str_vars, int_vars, float_vars, bool_vars, str_vars_f = [], [], [], [], []
         # Tokenizer loop
         for key, token in enumerate(self._tokens):
 
@@ -89,6 +85,10 @@ class Tokenizer:
             # Check if function.name token is a string
             # to avoid function name and string type conflicts
             if token[0] == Token.Literal.String.Double or token[0] == Token.Literal.String.Single:
+                # Check and add to str_vars_f list which is a list for (func) strings.
+                # (eg.: print("func_str"))
+                if not token[1] in self.QUOTES and not token[1] == ' ':
+                    str_vars_f.append((tok_id, str(token_value)))
                 self.TOKENS.append((tok_id, current_token, str(token_value)))
                 continue
             # After checking the ID-token dictionary
@@ -129,13 +129,13 @@ class Tokenizer:
                 # Check boolean
                 elif self._tokens[key+2][0] == Token.Keyword.Constant and self._tokens[key+2][1] in self.BOOLEAN:
                     bool_vars.append((key+2, bool(self._tokens[key+2][1])))
-
             # Create a dict for every variable type and values
             self.VARS = {
                 'strings': str_vars,
                 'integers': int_vars,
                 'floats': float_vars,
-                'booleans': bool_vars
+                'booleans': bool_vars,
+                'strings_func': str_vars_f
             }
 
         # Delete ID-token dictionary
