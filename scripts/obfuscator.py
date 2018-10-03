@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import random
 from scripts.tokenizer import Tokenizer
-from scripts.strgen import StringGenerator
+from scripts.strgen import generate_rand_str as StringGenerator
 from pygments.token import Token
 from scripts.io import read_file, write_file
 
