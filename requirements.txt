@@ -1,0 +1,2 @@
+argparse==1.4.0
+Pygments==2.2.0

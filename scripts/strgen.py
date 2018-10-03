@@ -1,6 +1,6 @@
-# coding: utf-8
-
-import random, string
+# -*- coding utf:8 -*-
+import random
+import string
 
 py_keywords  = __import__('keyword').kwlist
 gen_alphabet = lambda x, y: ''.join(map(chr, range(x, y)))
