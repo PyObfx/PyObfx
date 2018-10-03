@@ -1,24 +1,24 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # Obfuscated with PyObfx #
-QosYvRyfSw = lambda n: (n - (3 % 1)) - 4
-xvQDgmpEZO = lambda s: ''.join(chr(QosYvRyfSw(ord(c))) for c in s)
-noNKjmMOaJQRYcxTFPZrtCDWIzekHlip=xvQDgmpEZO("@1$Xiwx$1B")
-QnmRxAZYBuPhEiHLMTUwDbpNet=xvQDgmpEZO("|")
-FHQBLYUTklgPqRdZyAJEsnitMKbxaGofumpjVNwh=QosYvRyfSw(13.9)
-ZOQBUkvhqKAuJESWdYNXHeympMTLroaD=QosYvRyfSw(4)
-GuKyRsAoXVEaBivjPgcfkUJLSDdCwNzYqrml=bool(QosYvRyfSw(5))
-sIPzLHXh=xvQDgmpEZO("Lm%$")
+lHeDLPkxRB = lambda n: (n - (2 % 3)) - 4
+kFsGgltQhT = lambda s: ''.join(chr(lHeDLPkxRB(ord(c))) for c in s)
+ZtBWOMCqAavJoQhnwRjbPkLXEecDsUpm = kFsGgltQhT("B3&Zkyz&3D")
+ftuiXELzHQRemVspFaBCNYwqjS   =   kFsGgltQhT("~")
+LvBPJuecUKRICAGbTOoaqfZNErWzlFXpSDihHmtY = lHeDLPkxRB(15.9)
+YTCadkbBirVWtgQhAzpsRPcfEGjqDxZN = lHeDLPkxRB(6)
+WsvroKMuOkFnEYqPVgJdGNtAQxjfyRXehiwl = bool(lHeDLPkxRB(7))
+PuEJxYwc = kFsGgltQhT("No\'&")
 
-def FyldBSOY():
-	print(FHQBLYUTklgPqRdZyAJEsnitMKbxaGofumpjVNwh)
-	print(ZOQBUkvhqKAuJESWdYNXHeympMTLroaD)
-	print(GuKyRsAoXVEaBivjPgcfkUJLSDdCwNzYqrml)
-	print(sIPzLHXh + " " + noNKjmMOaJQRYcxTFPZrtCDWIzekHlip)
-	def tpiUGqvgTnNRXo():
-		print(xvQDgmpEZO("e{iwsqi"))
-		print(xvQDgmpEZO("mw$xlmw$viepp}${svomrkC") + xvQDgmpEZO("$sl0$mx$mw2"))
-	tpiUGqvgTnNRXo()
+def JhicVvXd():
+    print(LvBPJuecUKRICAGbTOoaqfZNErWzlFXpSDihHmtY)
+    print(YTCadkbBirVWtgQhAzpsRPcfEGjqDxZN)
+    print(WsvroKMuOkFnEYqPVgJdGNtAQxjfyRXehiwl)
+    print(PuEJxYwc + kFsGgltQhT("&") + ZtBWOMCqAavJoQhnwRjbPkLXEecDsUpm)
+    def oNUGKfwZQCqpjs():
+    	print(kFsGgltQhT("g}kyusk"))
+    	print(kFsGgltQhT("oy&znoy&xkgrr&}uxqotmE") + kFsGgltQhT("&un2&oz&oy4"))
+    oNUGKfwZQCqpjs()
 
-if __name__ == xvQDgmpEZO("ccqemrcc"):
-	FyldBSOY()
+if __name__ == kFsGgltQhT("eesgotee"):
+    JhicVvXd()

@@ -32,6 +32,10 @@ class Obfuscator:
         # Randomized deobfuscator function names
         self.deobfuscator_name = generate_rand_str(1, 10)
         self.str_deobfuscator_name = generate_rand_str(1, 10)
+        # Quote list
+        self.quotes = ["'", '"', '"""', "'''"]
+        # Boolean value list
+        self.boolean_val = ['True', 'False']
 
     # str.format with int deobfuscator name
     string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
@@ -62,75 +66,71 @@ class Obfuscator:
                 for index in token_index:
                     current_token = self.tokenizer.TOKENS[index]
                     # Change list element
-                    self.tokenizer.TOKENS[index] = (current_token[0], (Token.Name, obf_var_name), obf_var_name)
-                    
-    def _obfuscate_var_values(self, obfuscator):
-        # Get parsed variables from tokenizer
-        variables = self.tokenizer.get_variables()
+                    self.tokenizer.TOKENS[index] = (current_token[0], 
+                        (Token.Name, obf_var_name), obf_var_name)
 
-        # Integer and Float Obfuscation
-        for index, value in variables['integers'] + variables['floats']:
-            # Get token
-            current_token = self.tokenizer.TOKENS[index]
-            # Obfuscate variable value
-            obf_val = obfuscator(value)
-            # Update token list
-            self.tokenizer.TOKENS[index] = (
-                current_token[0], current_token[1],
-                f'{self.deobfuscator_name}({obf_val})')
+    def _obfuscate_vars(self, obfuscator, token_type):
+        # Inner function for type casting
+        # [can be simplified]
+        def cast(token):
+            if token_type == Token.Literal.Number.Integer:
+                return int(token)
+            elif token_type == Token.Literal.Number.Float:
+                return float(token)
+            elif token_type == Token.Keyword.Constant:
+                return bool(token)
+        # Iterate through the tokens and check if
+        # token type equals token_type
+        for token in self.tokenizer.TOKENS:
+            if token[1][0] == token_type:
+                # Cast and obfuscate the value
+                obf_val = obfuscator(cast(token[2]))
+                # Find usages for current token
+                token_index = self.tokenizer.find_index_by_id(token[0])
+                # Update old values with new obfuscated values
+                # If obfuscation type is a boolean obfuscation
+                # don't forget to add casting to new string
+                for index in token_index:
+                    # Get token
+                    current_token = self.tokenizer.TOKENS[index]
+                    # Check boolean obfuscation
+                    if token_type == Token.Keyword.Constant and \
+                    current_token[2] in self.boolean_val:
+                        # Add boolean casting [bool(...)]
+                        # Update TOKENS
+                        self.tokenizer.TOKENS[index] = (
+                        current_token[0], current_token[1],
+                        f'bool({self.deobfuscator_name}({obf_val}))')
+                    else:
+                        # Update TOKENS
+                        self.tokenizer.TOKENS[index] = (
+                        current_token[0], current_token[1],
+                        f'{self.deobfuscator_name}({obf_val})')
 
-        # Boolean Obfuscation
-        for index, value in variables['booleans']:
-            # Get token
-            current_token = self.tokenizer.TOKENS[index]
-             # Obfuscate variable value
-            obf_val = obfuscator(value)
-            # Update token list
-            self.tokenizer.TOKENS[index] = (
-                current_token[0], current_token[1],
-                f'bool({self.deobfuscator_name}({obf_val}))')
-
-        # String Obfuscation
-        for indexes, string in variables['strings']:
-            # Get first quote
-            start = self.tokenizer.TOKENS[indexes[0]]
-            # Change quote with obfuscator method
-            self.tokenizer.TOKENS[indexes[0]] = (
-                *start[:2], f'{self.str_deobfuscator_name}({start[2]}')
-            # Obfuscate string value
-            obf_string = self._escape(
-                ''.join(chr(obfuscator(ord(c))) for c in string))
-            # Change last quote with parentheses and update token list
-            self.tokenizer.TOKENS[indexes[1]] = (
-                *self.tokenizer.TOKENS[indexes[1]][:2], obf_string)
-            end = self.tokenizer.TOKENS[indexes[2]]
-            self.tokenizer.TOKENS[indexes[2]] = (*end[:2], f'{end[2]})')
-
-        # Function Strings Obfuscation
-        for index, string in variables['strings_func']:
-            # Get token
-            current_token = self.tokenizer.find_by_id(index)
-            # Check if string is changed before.
-            # Some function strings and normal strings have
-            # same types. So, if condition is necessary. 
-            # If value of current token changed before,
-            # it is not the string we are looking for.
-            if string == current_token[2]:
-                # Obfuscate the string
+    def _obfuscate_strings(self, obfuscator):
+        # Iterate through the tokens and make sure
+        # current token is string and not an unnecessary
+        # char (quote)
+        for token in self.tokenizer.TOKENS:
+            if token[1][0] == Token.Literal.String.Double and \
+            Token.Literal.String.Single and not \
+             token[2] in self.quotes:
+                 # Obfuscate the string
                 # (eg.: <deobfuscator_name>('<obfuscated_string>'))
                 obf_string = self.str_deobfuscator_name + "(\"" + self._escape(
-                ''.join(chr(obfuscator(ord(c))) for c in string)) + "\")"
-                # Find usages for current token with find_index_by_id method
-                token_index = self.tokenizer.find_index_by_id(current_token[0])
+                ''.join(chr(obfuscator(ord(c))) for c in token[2])) + "\")"
+                # Find usages for current token
+                token_index = self.tokenizer.find_index_by_id(token[0])
                 # Iterate through the indexes and change current value with
                 # new obfuscated value
                 for index in token_index:
-                    token = self.tokenizer.TOKENS[index]
-                    self.tokenizer.TOKENS[index] = (token[0], (Token.Name, obf_string), obf_string)
+                    current_token = self.tokenizer.TOKENS[index]
+                    self.tokenizer.TOKENS[index] = (current_token[0], 
+                        (Token.Name, obf_string), obf_string)
                     # Pop unnecessary escape characters
                     # (eg.: print("deobf("test")") -> Quote is unnecessary)
                     for n_index in range(self.quote_dist_constant):
-                        if self.tokenizer.TOKENS[index-n_index][2] in self.tokenizer.QUOTES:
+                        if self.tokenizer.TOKENS[index-n_index][2] in self.quotes:
                             self.tokenizer.TOKENS.pop(index-n_index)
                             self.tokenizer.TOKENS.pop(index)
 
@@ -144,11 +144,19 @@ class Obfuscator:
         self._obfuscate_names(Token.Name)
         # Function Name Obfuscation
         self._obfuscate_names(Token.Name.Function)
-        # Variable Value Obfuscation
-        self._obfuscate_var_values(obfuscator)
+        # Integer Obfuscation
+        self._obfuscate_vars(obfuscator, 
+            Token.Literal.Number.Integer)
+        # Float Obfuscation
+        self._obfuscate_vars(obfuscator, 
+            Token.Literal.Number.Float)
+        # Boolean Obfuscation
+        self._obfuscate_vars(obfuscator, 
+            Token.Keyword.Constant)
+        # String Obfuscation
+        self._obfuscate_strings(obfuscator)
         # Save file
         self.save_obfuscated_file()
-
 
     def save_obfuscated_file(self):
         new_file_content = ''
