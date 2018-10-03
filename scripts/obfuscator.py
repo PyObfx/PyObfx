@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 import random
 from scripts.tokenizer import Tokenizer
-from scripts.strgen import StringGenerator
+from scripts.strgen import generate_rand_str
 from pygments.token import Token
 from scripts.io import read_file, write_file
-
 
 class Obfuscator:
     def __init__(self, file_name):
@@ -28,15 +27,11 @@ class Obfuscator:
         self.obf_len_constant = 2
         # Quote character distance from string (max)
         self.quote_dist_constant = 5
-        # String generator
-        self.strgen_for_variable = StringGenerator(1)
         # New file extension for obfuscated file
         self.obfx_ext = "_obfx.py"
         # Randomized deobfuscator function names
-        self.deobfuscator_name = self.strgen_for_variable.generateRandStr(
-            2, 10)
-        self.str_deobfuscator_name = self.strgen_for_variable.generateRandStr(
-            2, 10)
+        self.deobfuscator_name = generate_rand_str(1, 10)
+        self.str_deobfuscator_name = generate_rand_str(1, 10)
 
     # str.format with int deobfuscator name
     string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
@@ -59,7 +54,7 @@ class Obfuscator:
                 # Get the name value
                 name_value = token[2]
                 # Obfuscate the name string
-                obf_var_name = self.strgen_for_variable.generateRandStr(len(name_value), len(name_value) * self.obf_len_constant)
+                obf_var_name = generate_rand_str(1, len(name_value) * self.obf_len_constant)
                 # Find usages for current name with find_index_by_id method
                 token_index = self.tokenizer.find_index_by_id(token[0])
                 # Iterate through the indexes and change current value with
