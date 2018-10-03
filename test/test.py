@@ -12,6 +12,10 @@ def main():
     print(test_int)
     print(test_bool)
     print(hi + " " + test_str)
+    def awesome():
+    	print("awesome")
+    	print("is this really working?" + " oh, it is.")
+    awesome()
 
 if __name__ == "__main__":
     main()

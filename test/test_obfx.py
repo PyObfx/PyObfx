@@ -1,20 +1,24 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # Obfuscated with PyObfx #
-xeqWBQb = lambda n: (n - (1 % 3)) - 1
-eSHtjETlhC = lambda s: ''.join(chr(xeqWBQb(ord(c))) for c in s)
-kopkhPxqBItmVfHFFsWbgdUoRZD=eSHtjETlhC(">/\"Vguv\"/@")
-jNNOyeJtJbdMcAzmuWRwqaf=eSHtjETlhC("z")
-KkJjOpAcVFbasYpFZ=xeqWBQb(11.9)
-TLrwjLAxKXelNDXqhXFzQ=xeqWBQb(2)
-lHpYbbLqEBromXui=bool(xeqWBQb(3))
-oWirkIN=eSHtjETlhC("Jk#\"")
+XRIpWYKVRY = lambda n: (n - (1 % 4)) - 1
+jnKN = lambda s: ''.join(chr(XRIpWYKVRY(ord(c))) for c in s)
+KchnqqfstztCOLnWbJgFHocfx=jnKN(">/\"Vguv\"/@")
+nuDbzMspCzFoOYoZubXWlq=jnKN("z")
+DoNDsFHmcXJQXNKZjmLwJGjv=XRIpWYKVRY(11.9)
+suLDmViBAkKxQyvTTiiyPCvHEnfAyo=XRIpWYKVRY(2)
+KTmZeBCOFksDfKUtCTY=bool(XRIpWYKVRY(3))
+uZtb=jnKN("Jk#\"")
 
-def main():
- print(KkJjOpAcVFbasYpFZ)
- print(TLrwjLAxKXelNDXqhXFzQ)
- print(lHpYbbLqEBromXui)
- print(oWirkIN + " " + kopkhPxqBItmVfHFFsWbgdUoRZD)
+def xYnj():
+	print(DoNDsFHmcXJQXNKZjmLwJGjv)
+	print(suLDmViBAkKxQyvTTiiyPCvHEnfAyo)
+	print(KTmZeBCOFksDfKUtCTY)
+	print(uZtb + " " + KchnqqfstztCOLnWbJgFHocfx)
+	def cgwuHCI():
+		print(jnKN("cyguqog"))
+		print(jnKN("ku\"vjku\"tgcnn{\"yqtmkpiA") + jnKN("\"qj.\"kv\"ku0"))
+	cgwuHCI()
 
-if __name__ == "__main__":
- main()
+if __name__ == jnKN("aaockpaa"):
+	xYnj()

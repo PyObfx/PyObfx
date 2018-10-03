@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import argparse
 
-
 def cli_arg_parser():
     """
     Parses the arguments from CLI and returns to the dictionary
