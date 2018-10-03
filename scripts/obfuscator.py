@@ -29,14 +29,12 @@ class Obfuscator:
         # Quote character distance from string (max)
         self.quote_dist_constant = 5
         # String generator
-        self.strgen_for_variable = StringGenerator(1)
+        #self.strgen_for_variable = StringGenerator(1, 16)
         # New file extension for obfuscated file
         self.obfx_ext = "_obfx.py"
         # Randomized deobfuscator function names
-        self.deobfuscator_name = self.strgen_for_variable.generateRandStr(
-            2, 10)
-        self.str_deobfuscator_name = self.strgen_for_variable.generateRandStr(
-            2, 10)
+        self.deobfuscator_name = StringGenerator(2, 10)
+        self.str_deobfuscator_name = StringGenerator(2, 10)
 
     # str.format with int deobfuscator name
     string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
@@ -59,7 +57,9 @@ class Obfuscator:
                 # Get the name value
                 name_value = token[2]
                 # Obfuscate the name string
-                obf_var_name = self.strgen_for_variable.generateRandStr(len(name_value), len(name_value) * self.obf_len_constant)
+                obf_var_name = StringGenerator(len(name_value) if not len(name_value) >= 5 else random.randint(1,5),
+                                               (len(name_value) *
+                                                self.obf_len_constant))
                 # Find usages for current name with find_index_by_id method
                 token_index = self.tokenizer.find_index_by_id(token[0])
                 # Iterate through the indexes and change current value with
