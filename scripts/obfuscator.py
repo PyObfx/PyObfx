@@ -5,10 +5,13 @@ from scripts.tokenizer import Tokenizer
 from scripts.strgen import generate_rand_str
 from pygments.token import Token
 from scripts.io import read_file, write_file
+from scripts.logger import Log
 from scripts.packer import *
 
 class Obfuscator:
     def __init__(self, args):
+        # Logger
+        self.logger = Log()
         # Header for obfuscated file
         self.obfx_header = "# Obfuscated with PyObfx #"
         # Obfx arguments

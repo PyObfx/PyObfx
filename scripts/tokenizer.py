@@ -4,11 +4,14 @@ import re
 from pygments.lexers import Python3Lexer
 from pygments.token import Token
 from random import randint
+from scripts.logger import Log
 
 class Tokenizer:
     TOKENS = list()
 
     def __init__(self, data):
+        # Logger
+        self.logger = Log()
         # Max ID
         self.max_id = 10 * 10 * 10
         # Get tokens
