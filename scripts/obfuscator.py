@@ -59,6 +59,7 @@ class Obfuscator:
                 name_value = token[2]
                 # Obfuscate the name string
                 obf_var_name = generate_rand_str(1, len(name_value) * self.obf_len_constant)
+
                 # Find usages for current name with find_index_by_id method
                 token_index = self.tokenizer.find_index_by_id(token[0])
                 # Iterate through the indexes and change current value with
@@ -134,7 +135,7 @@ class Obfuscator:
                             self.tokenizer.TOKENS.pop(index-n_index)
                             self.tokenizer.TOKENS.pop(index)
 
-    def obfuscate(self, obfuscation=1):
+    def obfuscate(self, pack, obfuscation=1):
         # Declare obfuscator
         obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
         # Select obfuscator
@@ -156,9 +157,12 @@ class Obfuscator:
         # String Obfuscation
         self._obfuscate_strings(obfuscator)
         # Save file
-        self.save_obfuscated_file()
+        if pack == True:
+            return self.return_obfuscated_file()
+        self._create_obfuscated_file_content()
 
-    def save_obfuscated_file(self):
+    # creating obfuscated file content for both file i/o and packing
+    def _create_obfuscated_file_content(self):
         new_file_content = ''
         # Shebang check & fix
         for index, token in enumerate(self.tokenizer.TOKENS[:4]):
@@ -176,6 +180,16 @@ class Obfuscator:
         # Write new file 
         for token in self.tokenizer.TOKENS:
             new_file_content += token[2]
+
+        return {'name': new_file_name,
+                'context': new_file_content}
+
+    def return_obfuscated_file(self):
+        return self._create_obfuscated_file_content()['context']
+
+    def save_obfuscated_file(self):
+        new_file_name = self._create_obfuscated_file_content()['name']
+        new_file_content = self._create_obfuscated_file_content()['context']
         write_file(new_file_name, new_file_content)
         print("Successfully obfuscated.\nSaved to: " + new_file_name)
         print(new_file_content)  # testing
