@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import random
 from scripts.tokenizer import Tokenizer
-from scripts.strgen import StringGenerator
+from scripts.strgen import generate_rand_str as StringGenerator
 from pygments.token import Token
 from scripts.io import read_file, write_file
 
@@ -29,14 +29,12 @@ class Obfuscator:
         # Quote character distance from string (max)
         self.quote_dist_constant = 5
         # String generator
-        self.strgen_for_variable = StringGenerator(1)
+        #self.strgen_for_variable = StringGenerator(1, 16)
         # New file extension for obfuscated file
         self.obfx_ext = "_obfx.py"
         # Randomized deobfuscator function names
-        self.deobfuscator_name = self.strgen_for_variable.generateRandStr(
-            2, 10)
-        self.str_deobfuscator_name = self.strgen_for_variable.generateRandStr(
-            2, 10)
+        self.deobfuscator_name = StringGenerator(2, 10)
+        self.str_deobfuscator_name = StringGenerator(2, 10)
 
     # str.format with int deobfuscator name
     string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
@@ -59,7 +57,9 @@ class Obfuscator:
                 # Get the name value
                 name_value = token[2]
                 # Obfuscate the name string
-                obf_var_name = self.strgen_for_variable.generateRandStr(len(name_value), len(name_value) * self.obf_len_constant)
+                obf_var_name = StringGenerator(len(name_value) if not len(name_value) >= 5 else random.randint(1,5),
+                                               (len(name_value) *
+                                                self.obf_len_constant))
                 # Find usages for current name with find_index_by_id method
                 token_index = self.tokenizer.find_index_by_id(token[0])
                 # Iterate through the indexes and change current value with
@@ -139,7 +139,7 @@ class Obfuscator:
                             self.tokenizer.TOKENS.pop(index-n_index)
                             self.tokenizer.TOKENS.pop(index)
 
-    def obfuscate(self, obfuscation=1):
+    def obfuscate(self, pack, obfuscation=1):
         # Declare obfuscator
         obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
         # Select obfuscator
@@ -152,10 +152,12 @@ class Obfuscator:
         # Variable Value Obfuscation
         self._obfuscate_var_values(obfuscator)
         # Save file
+        if pack == True:
+            return self.return_obfuscated_file()
         self.save_obfuscated_file()
 
-
-    def save_obfuscated_file(self):
+    # creating obfuscated file content for both file i/o and packing
+    def _create_obfuscated_file_content(self):
         new_file_content = ''
         # Shebang check & fix
         for index, token in enumerate(self.tokenizer.TOKENS[:4]):
@@ -173,6 +175,16 @@ class Obfuscator:
         # Write new file 
         for token in self.tokenizer.TOKENS:
             new_file_content += token[2]
+
+        return {'name': new_file_name,
+                'context': new_file_content}
+
+    def return_obfuscated_file(self):
+        return self._create_obfuscated_file_content()['context']
+
+    def save_obfuscated_file(self):
+        new_file_name = self._create_obfuscated_file_content()['name']
+        new_file_content = self._create_obfuscated_file_content()['context']
         write_file(new_file_name, new_file_content)
         print("Successfully obfuscated.\nSaved to: " + new_file_name)
         print(new_file_content)  # testing
