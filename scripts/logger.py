@@ -32,12 +32,3 @@ class Log:
             self._write(msg=msg, state=state)
 
 
-if __name__ == '__main__':
-    logger = Log('log.txt')
-    logger._clear()
-    logger.log('Obfuscating strings')
-    time.sleep(1)
-    logger.log('Replacing bad chars', state='critical')
-    time.sleep(1)
-    logger.log('Obfuscate fail', state='error')
-
