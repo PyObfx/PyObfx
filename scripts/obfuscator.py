@@ -5,14 +5,20 @@ from scripts.tokenizer import Tokenizer
 from scripts.strgen import generate_rand_str
 from pygments.token import Token
 from scripts.io import read_file, write_file
+from scripts.logger import Log
+from scripts.packer import *
 
 class Obfuscator:
-    def __init__(self, file_name):
+    def __init__(self, args):
+        # Logger
+        self.logger = Log()
         # Header for obfuscated file
         self.obfx_header = "# Obfuscated with PyObfx #"
+        # Obfx arguments
+        self.args = args
         # File name and content
-        self.file_name = file_name
-        self.file_content = read_file(file_name)
+        self.file_name = self.args['file']
+        self.file_content = read_file(self.file_name)
         # Tokenize the source and retrieve tokenizer object
         self.tokenizer = Tokenizer(self.file_content)
         # Random integers for obfuscation
@@ -59,7 +65,6 @@ class Obfuscator:
                 name_value = token[2]
                 # Obfuscate the name string
                 obf_var_name = generate_rand_str(1, len(name_value) * self.obf_len_constant)
-
                 # Find usages for current name with find_index_by_id method
                 token_index = self.tokenizer.find_index_by_id(token[0])
                 # Iterate through the indexes and change current value with
@@ -135,7 +140,7 @@ class Obfuscator:
                             self.tokenizer.TOKENS.pop(index-n_index)
                             self.tokenizer.TOKENS.pop(index)
 
-    def obfuscate(self, pack, obfuscation=1):
+    def obfuscate(self, obfuscation=1):
         # Declare obfuscator
         obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
         # Select obfuscator
@@ -157,12 +162,9 @@ class Obfuscator:
         # String Obfuscation
         self._obfuscate_strings(obfuscator)
         # Save file
-        if pack == True:
-            return self.return_obfuscated_file()
-        self._create_obfuscated_file_content()
+        self._save_obfuscated_file()
 
-    # creating obfuscated file content for both file i/o and packing
-    def _create_obfuscated_file_content(self):
+    def _save_obfuscated_file(self):
         new_file_content = ''
         # Shebang check & fix
         for index, token in enumerate(self.tokenizer.TOKENS[:4]):
@@ -177,19 +179,26 @@ class Obfuscator:
         new_file_content += self.obfx_header + '\n'
         # Write deobfuscator functions
         new_file_content += f'{self.deobfuscator_name} = {self.deobfuscator}\n{self.str_deobfuscator_name} = {self.string_deobfuscator.format(self.deobfuscator_name)}\n'
-        # Write new file 
+        # Create new file content from tokens 
         for token in self.tokenizer.TOKENS:
             new_file_content += token[2]
-
-        return {'name': new_file_name,
-                'context': new_file_content}
-
-    def return_obfuscated_file(self):
-        return self._create_obfuscated_file_content()['context']
-
-    def save_obfuscated_file(self):
-        new_file_name = self._create_obfuscated_file_content()['name']
-        new_file_content = self._create_obfuscated_file_content()['context']
+        # Pack
+        new_file_content = self._pack(new_file_content)
+        # Write file
         write_file(new_file_name, new_file_content)
         print("Successfully obfuscated.\nSaved to: " + new_file_name)
         print(new_file_content)  # testing
+
+    def _pack(self, file_content):
+        # Packer functions
+        packer_dispatcher = {
+            'bz2': bz2_pack(file_content),
+            'gz': gz_pack(file_content),
+            'lzma': lzma_pack(file_content)
+        }
+        # Pack file if -p argument is provided and packer type is valid
+        try:
+            file_content = packer_dispatcher[self.args['pack']]
+        except KeyError:
+            pass
+        return file_content

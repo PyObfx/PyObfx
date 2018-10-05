@@ -1,18 +1,18 @@
+#!/usr/bin/python3.6
+# -*- coding: utf-8 -*-
 import platform
 import time
 
-
 class Log:
     states = {
-            'error':('ERROR', '\033[91m'),
-            'critical':('CRITICAL','\033[93m'),
-            'info': ('INFO', '\033[92m')
+            'error':('[E]', '\033[91m'),
+            'critical':('[C]','\033[93m'),
+            'info': ('[I]', '\033[92m')
             }
     _RESET = '\033[39m'
     def __init__(self, path=None):
         self.path = path
         self.os =  platform.system()
-
 
     def _write(self, msg, state):
         content = f"[{time.strftime('%X')}] {self.states[state][0]} {msg}"
