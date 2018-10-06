@@ -149,11 +149,9 @@ class Obfuscator:
         # current token is string and not an unnecessary
         # char (quote)
         for token in self.tokenizer.TOKENS:
-            print(token)
             if token[1][0] == Token.Literal.String.Double and not token[2] in self.quotes or \
             token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes: 
                 string_value = self._unescape_str(token[2])
-                print(string_value)
                 # String obfuscation procedure
                 obfuscated = ''
                 # Obfuscate chars in string
