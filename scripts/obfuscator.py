@@ -206,14 +206,19 @@ class Obfuscator:
         return file_content
 
     def _prepare_imports(self):
+        # Drafts
         draft1 = '^from\s+(.+)\s+import\s+(.*)'
         draft2 = '^import\s+(.+)'
+        # for the content to be obfuscated
         replaced = ""
+        # for the  remaining content except import parts
         other_content = ""
         obf_dict = {}
         for line in self.file_content.split('\n'):
-            que1 = re.search('as\s+(.+)$', line)
+            que1 = re.search('as\s+(.+)$', line) # import .. as ..
             if que1:
+                # same for the next 3 steps
+                # Get random variable name
                 obf_name = generate_rand_str(1, 30) #change second param
                 real_namespace = que1.group(1)
                 obf_dict[real_namespace] = obf_name
@@ -221,17 +226,17 @@ class Obfuscator:
                 replaced += line.split('as')[0] + ' as ' + obf_name + '\n'    
                 continue
                 
-            que2 = re.search(draft1, line)
+            que2 = re.search(draft1, line) 
             if que2:
                 if ',' in que2.group(2):
-                    for namespace in que2.group(2).split(','):
+                    for namespace in que2.group(2).split(','): # from x import y,z,t
                         obf_name = generate_rand_str(1,30)
                         real_namespace = namespace.strip()
                         obf_dict[real_namespace] = obf_name
 
                         replaced += f"from {que2.group(1)} import {namespace} as {obf_name}\n"
 
-                else:
+                else: # from x import y (single)
                     obf_name = generate_rand_str(1,30)
                     real_namespace = que2.group(2)
                     obf_dict[real_namespace] = obf_name
@@ -243,14 +248,16 @@ class Obfuscator:
             if que3:
                 if ',' in que3.group(0):
                     # print('---> ' + str(que.group(1)))
-                    for namespace in que3.group(1).split(','):
+                    for namespace in que3.group(1).split(','): # import x,y,z
                         obf_name = generate_rand_str(1, 30)
                         real_namespace = namespace.strip()
                         obf_dict[real_namespace] = obf_name
 
                         replaced += f'import {namespace} as {obf_name}\n'
                 continue
+            # all contents except import
             other_content += line
 
+        # eleminate the class variable from import parts
         self.file_content = other_content
         return (obf_dict, replaced)
