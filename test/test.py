@@ -5,7 +5,7 @@ real_test_str   =   "x"
 test_float = 9.9
 test_int = 0
 test_bool = True
-hi = "Hi! "
+hi = "Hi! \n"
 
 def main():
     print(test_float)
@@ -14,7 +14,7 @@ def main():
     print(hi + " " + test_str)
     def awesome():
     	print("awesome")
-    	print("is this really working?" + " oh, it is.")
+    	print("\t+\'is this really working?\'\n" + "\t-\"oh, it is\"")
     awesome()
 
 if __name__ == "__main__":

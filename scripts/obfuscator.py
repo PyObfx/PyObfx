@@ -14,14 +14,19 @@ class Obfuscator:
         self.logger = Log()
         # Header for obfuscated file
         self.obfx_header = "# Obfuscated with PyObfx #"
+        # Escape placeholder
+        self.escape_placeholder = "#escaped_char#"
         # Obfx arguments
         self.args = args
         # File name and content
         self.file_name = self.args['file']
         self.file_content = read_file(self.file_name)
+        # Imports obfuscation
         self.import_dict, self.import_content = self._prepare_imports() # warn: change self.file_content variable
+        # Escape chars in file
+        self.escaped_file = self._escape_file(self.file_content)
         # Tokenize the source and retrieve tokenizer object
-        self.tokenizer = Tokenizer(self.file_content)
+        self.tokenizer = Tokenizer(self.escaped_file)
         # Random integers for obfuscation
         self.ints = [random.randint(1, 5) for _ in range(3)]
         # Deobfuscator declarations
@@ -43,6 +48,10 @@ class Obfuscator:
         self.quotes = ["'", '"', '"""', "'''"]
         # Boolean value list
         self.boolean_val = ['True', 'False']
+        # Escape Sequences
+        self.escapes = [('\a', '\\a'), ('\b', '\\b'), \
+        ('\f', '\\f'), ('\n', '\\n'), ('\r', '\\r'), \
+         ('\t', '\\t'), ('\v', '\\v')]
 
     # str.format with int deobfuscator name
     string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
@@ -55,7 +64,30 @@ class Obfuscator:
 
     # Escape string
     def _escape(self, s):
-        return s.replace('"', r'\"').replace("'", r"\'")
+        s = s.replace('"', r'\"').replace("'", r"\'")
+        for escape in self.escapes:
+            s = s.replace(escape[0], escape[1])
+        return s
+
+    # Escape file
+    # (eg.: Replace '\' with placeholder)
+    def _escape_file(self, file_content):
+        # Double quote
+        file_content = file_content.replace("\\\"", "\\d")
+        # Single quote
+        file_content = file_content.replace("\\\'", "\\s")
+        return file_content.replace("\\", self.escape_placeholder)
+
+    # Unescape string using placeholder
+    def _unescape_str(self, s):
+        for escape in self.escapes:
+            s = s.replace(self.escape_placeholder+escape[1].replace("\\", ""), escape[0])
+        s = s.replace(self.escape_placeholder, '\\')
+        # Single quote
+        s = s.replace('\\s', '\'')
+        # Double quote
+        s = s.replace('\\d', '\"')
+        return s
 
     def _obfuscate_names(self, token_type):
         # Iterate through the tokens and check if
@@ -119,13 +151,17 @@ class Obfuscator:
         # current token is string and not an unnecessary
         # char (quote)
         for token in self.tokenizer.TOKENS:
-            if token[1][0] == Token.Literal.String.Double and \
-            Token.Literal.String.Single and not \
-             token[2] in self.quotes:
-                 # Obfuscate the string
+            if token[1][0] == Token.Literal.String.Double and not token[2] in self.quotes or \
+            token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes: 
+                string_value = self._unescape_str(token[2])
+                # String obfuscation procedure
+                obfuscated = ''
+                # Obfuscate chars in string
+                for c in string_value:
+                    obfuscated += ''.join(chr(obfuscator(ord(c))))
+                # Create obfuscated string
                 # (eg.: <deobfuscator_name>('<obfuscated_string>'))
-                obf_string = self.str_deobfuscator_name + "(\"" + self._escape(
-                ''.join(chr(obfuscator(ord(c))) for c in token[2])) + "\")"
+                obf_string = self.str_deobfuscator_name + "(\"" + self._escape(obfuscated) + "\")"
                 # Find usages for current token
                 token_index = self.tokenizer.find_index_by_id(token[0])
                 # Iterate through the indexes and change current value with
