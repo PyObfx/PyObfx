@@ -301,7 +301,7 @@ class Obfuscator:
                     replaced += f"import {real_namespace} as {obf_name}\n"
                     continue
             # all contents except import
-            other_content += line
+            other_content += line + '\n'
 
         # eleminate the class variable from import parts
         self.file_content = other_content
