@@ -272,6 +272,8 @@ class Obfuscator:
 
                         replaced += f"from {que2.group(1)} import {namespace} as {obf_name}\n"
 
+                    continue
+
                 else: # from x import y (single)
                     obf_name = generate_rand_str(1,30)
                     real_namespace = que2.group(2)
@@ -290,7 +292,14 @@ class Obfuscator:
                         obf_dict[real_namespace] = obf_name
 
                         replaced += f'import {namespace} as {obf_name}\n'
-                continue
+                    continue
+                else:
+                    obf_namr = generate_rand_str(1, 30)
+                    real_namespace = que3.group(1)
+                    obf_dict[real_namespace] = obf_name
+
+                    replaced += f"import {real_namespace} as {obf_name}\n"
+                    continue
             # all contents except import
             other_content += line
 
