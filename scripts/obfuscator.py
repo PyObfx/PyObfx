@@ -1,6 +1,6 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-import random
+import random, re
 from scripts.tokenizer import Tokenizer
 from scripts.strgen import generate_rand_str
 from pygments.token import Token
@@ -21,6 +21,8 @@ class Obfuscator:
         # File name and content
         self.file_name = self.args['file']
         self.file_content = read_file(self.file_name)
+        # Imports obfuscation
+        self.import_dict, self.import_content = self._prepare_imports() # warn: change self.file_content variable
         # Escape chars in file
         self.escaped_file = self._escape_file(self.file_content)
         # Tokenize the source and retrieve tokenizer object
@@ -212,6 +214,7 @@ class Obfuscator:
             self.obfx_ext)
         # Add header
         new_file_content += self.obfx_header + '\n'
+        new_file_content += self.import_content + '\n'
         # Write deobfuscator functions
         new_file_content += f'{self.deobfuscator_name} = {self.deobfuscator}\n{self.str_deobfuscator_name} = {self.string_deobfuscator.format(self.deobfuscator_name)}\n'
         # Create new file content from tokens 
@@ -237,3 +240,60 @@ class Obfuscator:
         except KeyError:
             pass
         return file_content
+
+    def _prepare_imports(self):
+        # Drafts
+        draft1 = '^from\s+(.+)\s+import\s+(.*)'
+        draft2 = '^import\s+(.+)'
+        # for the content to be obfuscated
+        replaced = ""
+        # for the  remaining content except import parts
+        other_content = ""
+        obf_dict = {}
+        for line in self.file_content.split('\n'):
+            que1 = re.search('as\s+(.+)$', line) # import .. as ..
+            if que1:
+                # same for the next 3 steps
+                # Get random variable name
+                obf_name = generate_rand_str(1, 30) #change second param
+                real_namespace = que1.group(1)
+                obf_dict[real_namespace] = obf_name
+
+                replaced += line.split('as')[0] + ' as ' + obf_name + '\n'    
+                continue
+                
+            que2 = re.search(draft1, line) 
+            if que2:
+                if ',' in que2.group(2):
+                    for namespace in que2.group(2).split(','): # from x import y,z,t
+                        obf_name = generate_rand_str(1,30)
+                        real_namespace = namespace.strip()
+                        obf_dict[real_namespace] = obf_name
+
+                        replaced += f"from {que2.group(1)} import {namespace} as {obf_name}\n"
+
+                else: # from x import y (single)
+                    obf_name = generate_rand_str(1,30)
+                    real_namespace = que2.group(2)
+                    obf_dict[real_namespace] = obf_name
+
+                    replaced += re.sub(draft1, line + f' as {obf_name}\n', line)
+                continue
+                  
+            que3 = re.search(draft2, line)
+            if que3:
+                if ',' in que3.group(0):
+                    # print('---> ' + str(que.group(1)))
+                    for namespace in que3.group(1).split(','): # import x,y,z
+                        obf_name = generate_rand_str(1, 30)
+                        real_namespace = namespace.strip()
+                        obf_dict[real_namespace] = obf_name
+
+                        replaced += f'import {namespace} as {obf_name}\n'
+                continue
+            # all contents except import
+            other_content += line
+
+        # eleminate the class variable from import parts
+        self.file_content = other_content
+        return (obf_dict, replaced)
