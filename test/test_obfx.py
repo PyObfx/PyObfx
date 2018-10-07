@@ -1,1 +1,24 @@
-import zlib,base64;exec(zlib.decompress(base64.b64decode("eJyNkVlvGjEUhZ/rX3EL6jBuBSglTVukPLDvw7AvqoSYfWHsGXsGGKS0f71O0xSIVCUvlnV1zvH5fLPviwlnRc0lxTCNHUpKhTuUhfzHPOjUcIldhiS28t8eJ2I+1KyE69vYNODgxg6oqZgcIYumgzXr+WpnUYN72G0DzdgCKYNMIA9yCT7ALcbiWkJJb2Y1Ut5tr89CXoZcruBRl8i6w+RzlkyZIetYWC3KQAeXAMeoSRc+D9ZWp+K0VoMhUQxdbdszrzcy3Xk1SkXw+RU5Uy1Jaz89SaV6BqPVaK73+KC6N3eR1jn5/eXYqwyZES4AhA+unD+FQQvtA22zZRy0JhZf7RvNbm/mqdXOVjk6UU2fp2Z/Oq6PhPmi982XwneM+iM9Ucamtm1H9WmDr8K0yexgQp1W168N1eq15w6jyjActz3m7/br1JnritZdjo6zU39gkepq2qh3mlFLmDRKd5e/9BVjxJRdZ1I/BC/gFfojJwkMZJgW8G6qR46XyLiMBCqEzCWx/FZCfOF5jexS+xaoS/0/kk9XJIJCTF7b/VPQI2z7OGYkrHC1vvJ2zjPyu6c3LoPtBz9NuJ/B+H8KmkonIo6jbzP2S3pIjhGNg8afQlcVE/JZoieJprfPaS9bIORasNmQbWBuNnB/vSzT5DaNTTPzt+x5X+g3v34jBA==")))
+#!/usr/bin/python3.6
+# -*- coding: utf-8 -*-
+# Obfuscated with PyObfx #
+VWqIZTFAvS = lambda n: (n - (4 % 2)) - 5
+vIcDytFZaR = lambda s: ''.join(chr(VWqIZTFAvS(ord(c))) for c in s)
+PNCThHfVpoizXFYBvnbARLlrewQaWyMK = vIcDytFZaR("A2%Yjxy%2C")
+wacPgOFufMSJCVzrLKqoIWbvZY   =   vIcDytFZaR("}")
+caJhxmEfCXdbpQyHFrzKnASvwMVueWRkYDgGqBUj = VWqIZTFAvS(14.9)
+kQjFVegEUiXonYaWzfhKGbMCqOJxRpIZ = VWqIZTFAvS(5)
+uVHKNfLnPdUzAbMtqBkcWyXOmSrQxTpIwZhC = bool(VWqIZTFAvS(6))
+DyVecKMA = vIcDytFZaR("Mn&%")
+
+def LXQsgyVB():
+    print(caJhxmEfCXdbpQyHFrzKnASvwMVueWRkYDgGqBUj)
+    print(kQjFVegEUiXonYaWzfhKGbMCqOJxRpIZ)
+    print(uVHKNfLnPdUzAbMtqBkcWyXOmSrQxTpIwZhC)
+    print(DyVecKMA + vIcDytFZaR("%") + PNCThHfVpoizXFYBvnbARLlrewQaWyMK)
+    def QOBAadqPGZMXls():
+    	print(vIcDytFZaR("f|jxtrj"))
+    	print(vIcDytFZaR("0,nx%ymnx%wjfqq~%|twpnslD,") + vIcDytFZaR("2\'tm1%ny%nx\'"))
+    QOBAadqPGZMXls()
+
+if __name__ == vIcDytFZaR("ddrfnsdd"):
+    LXQsgyVB()

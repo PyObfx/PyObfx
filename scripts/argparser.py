@@ -16,7 +16,6 @@ def cli_arg_parser():
     parser.add_argument("-p",
                         "--pack",
                         help="Available packers: bz2, gz, lzma")
-
     # Return to dictionary
     return vars(parser.parse_args())
 
