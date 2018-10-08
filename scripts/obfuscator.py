@@ -178,28 +178,50 @@ class Obfuscator:
                             self.tokenizer.TOKENS.pop(index)
 
     def obfuscate(self, obfuscation=1):
+        self.logger.log('Obfuscation started')
         # Declare obfuscator
         obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
         # Select obfuscator
         obfuscator = obfuscators[obfuscation]
         self.deobfuscator = self.deobfuscators[obfuscation]
         # Variable Name Obfuscation
-        self._obfuscate_names(Token.Name)
+        try:
+            self._obfuscate_names(Token.Name)
+        except Exception as ex:
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating variable names', 'error')
+        else:
+            self.logger.log(f'Obfuscated variable names')
         # Function Name Obfuscation
-        self._obfuscate_names(Token.Name.Function)
-        # Integer Obfuscation
-        self._obfuscate_vars(obfuscator, 
-            Token.Literal.Number.Integer)
-        # Float Obfuscation
-        self._obfuscate_vars(obfuscator, 
-            Token.Literal.Number.Float)
-        # Boolean Obfuscation
-        self._obfuscate_vars(obfuscator, 
-            Token.Keyword.Constant)
-        # String Obfuscation
-        self._obfuscate_strings(obfuscator)
+        try:
+            self._obfuscate_names(Token.Name.Function)
+        except Exception as ex:
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating function names', 'error')
+        else:
+            self.logger.log(f'Obfuscated function names')
+        try:
+            # Integer Obfuscation
+            self._obfuscate_vars(obfuscator, 
+                Token.Literal.Number.Integer)
+            # Float Obfuscation
+            self._obfuscate_vars(obfuscator, 
+                Token.Literal.Number.Float)
+            # Boolean Obfuscation
+            self._obfuscate_vars(obfuscator, 
+                Token.Keyword.Constant)
+            # String Obfuscation
+            self._obfuscate_strings(obfuscator)
+        except Exception as ex:
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating values', 'error')
+        else:
+            self.logger.log(f'Obfuscated values')
         # Save file
-        self._save_obfuscated_file()
+        try:
+            self._save_obfuscated_file()
+        except Exception as ex:
+            self.logger.log(f'{type(ex).__name__} has occured while saving the obfuscated file', 'error')
+        else:
+            self.logger.log('Saved the obfuscated file')
+
 
     def _save_obfuscated_file(self):
         new_file_content = ''
@@ -221,7 +243,12 @@ class Obfuscator:
         for token in self.tokenizer.TOKENS:
             new_file_content += token[2]
         # Pack
-        new_file_content = self._pack(new_file_content)
+        try:
+            new_file_content = self._pack(new_file_content)
+        except Exception as ex:
+            self.logger.log(f'{type(ex).__name__} has occured while packing the obfuscated file', 'error')
+        else:
+            self.logger.log('Packed the obfuscated file')
         # Write file
         write_file(new_file_name, new_file_content)
         print("Successfully obfuscated.\nSaved to: " + new_file_name)
