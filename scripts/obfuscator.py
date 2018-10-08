@@ -253,7 +253,7 @@ class Obfuscator:
         for line in self.file_content.split('\n'):
             que1 = re.search('as\s+(.+)$', line) # import .. as ..
             if que1:
-                # same for the next 3 steps
+                # same for the next 4 steps
                 # Get random variable name
                 obf_name = generate_rand_str(1, 30) #change second param
                 real_namespace = que1.group(1)
@@ -271,6 +271,8 @@ class Obfuscator:
                         obf_dict[real_namespace] = obf_name
 
                         replaced += f"from {que2.group(1)} import {namespace} as {obf_name}\n"
+
+                    continue
 
                 else: # from x import y (single)
                     obf_name = generate_rand_str(1,30)
@@ -290,9 +292,16 @@ class Obfuscator:
                         obf_dict[real_namespace] = obf_name
 
                         replaced += f'import {namespace} as {obf_name}\n'
-                continue
+                    continue
+                else:
+                    obf_name = generate_rand_str(1, 30)
+                    real_namespace = que3.group(1)
+                    obf_dict[real_namespace] = obf_name
+
+                    replaced += f"import {real_namespace} as {obf_name}\n"
+                    continue
             # all contents except import
-            other_content += line
+            other_content += line + '\n'
 
         # eleminate the class variable from import parts
         self.file_content = other_content
