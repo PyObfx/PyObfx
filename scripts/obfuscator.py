@@ -103,6 +103,9 @@ class Obfuscator:
                     name_value = token[2]
                     # Obfuscate the name string
                     obf_var_name = generate_rand_str(1, len(name_value) * self.obf_len_constant)
+                    # Fix imports
+                    if name_value in list(self.import_dict.keys()):
+                        obf_var_name = self.import_dict[name_value]
                     # Find usages for current name with find_index_by_id method
                     token_index = self.tokenizer.find_index_by_id(token[0])
                     # Iterate through the indexes and change current value with
