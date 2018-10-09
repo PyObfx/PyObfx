@@ -1,7 +1,8 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 import os as oss
-import random
+import random as rnd
+import time
 
 test_str = "<- Test ->"
 real_test_str   =   "x"
@@ -15,6 +16,7 @@ def main():
     print(test_int)
     print(test_bool)
     print(hi + " " + test_str)
+    print(rnd.randint(5, 15))
     def awesome():
     	print("awesome")
     	print("\t+\'is this really working?\'\n" + "\t-\"oh, it is\"")

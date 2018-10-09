@@ -22,6 +22,10 @@ class Obfuscator:
         # File name and content
         self.file_name = self.args['file']
         self.file_content = read_file(self.file_name)
+        # Length constant for random string
+        self.obf_len_constant = 2
+        # Quote character distance from string (max)
+        self.quote_dist_constant = 5
         # Imports obfuscation
         self.import_dict, self.import_content = self._prepare_imports() # warn: change self.file_content variable
         # Escape chars in file
@@ -36,10 +40,6 @@ class Obfuscator:
             2: "lambda n: int((n ^ {}) / {})".format(*self.ints[:2]),
             3: "lambda n: n - sum({})".format(str(self.ints))
         }
-        # Length constant for random string
-        self.obf_len_constant = 2
-        # Quote character distance from string (max)
-        self.quote_dist_constant = 5
         # New file extension for obfuscated file
         self.obfx_ext = "_obfx.py"
         # Randomized deobfuscator function names
@@ -257,7 +257,7 @@ class Obfuscator:
                 if que1:
                     # same for the next 4 steps
                     # Get random variable name
-                    obf_name = generate_rand_str(1, 30) #change second param
+                    obf_name = generate_rand_str(1, len(que1.group(1)) * self.obf_len_constant)
                     real_namespace = que1.group(1)
                     obf_dict[real_namespace] = obf_name
 
@@ -268,7 +268,7 @@ class Obfuscator:
                 if que2:
                     if ',' in que2.group(2):
                         for namespace in que2.group(2).split(','): # from x import y,z,t
-                            obf_name = generate_rand_str(1,30)
+                            obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
                             real_namespace = namespace.strip()
                             obf_dict[real_namespace] = obf_name
 
@@ -277,7 +277,7 @@ class Obfuscator:
                         continue
 
                     else: # from x import y (single)
-                        obf_name = generate_rand_str(1,30)
+                        obf_name = generate_rand_str(1, len(que2.group(2)) * self.obf_len_constant)
                         real_namespace = que2.group(2)
                         obf_dict[real_namespace] = obf_name
 
@@ -289,14 +289,14 @@ class Obfuscator:
                     if ',' in que3.group(0):
                         # print('---> ' + str(que.group(1)))
                         for namespace in que3.group(1).split(','): # import x,y,z
-                            obf_name = generate_rand_str(1, 30)
+                            obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
                             real_namespace = namespace.strip()
                             obf_dict[real_namespace] = obf_name
 
                             replaced += f'import {namespace} as {obf_name}\n'
                         continue
                     else:
-                        obf_name = generate_rand_str(1, 30)
+                        obf_name = generate_rand_str(1, len(que3.group(1)) * self.obf_len_constant)
                         real_namespace = que3.group(1)
                         obf_dict[real_namespace] = obf_name
 
