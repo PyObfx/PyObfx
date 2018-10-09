@@ -106,11 +106,12 @@ class Obfuscator:
                     # Fix imports
                     if name_value in list(self.import_dict.keys()):
                         obf_var_name = self.import_dict[name_value]
-                    # Continue if current token is part of a function
-                    # (eg.: random.randint)
-                    if self.tokenizer.TOKENS[t_index+1][1][0] == Token.Operator or \
-                    self.tokenizer.TOKENS[t_index-1][1][0] == Token.Operator:
-                        continue
+                    else:
+                        # Continue if current token is part of a function
+                        # (eg.: random.randint)
+                        if self.tokenizer.TOKENS[t_index+1][1][0] == Token.Operator or \
+                            self.tokenizer.TOKENS[t_index-1][1][0] == Token.Operator:
+                            continue
                     # Find usages for current name with find_index_by_id method
                     token_index = self.tokenizer.find_index_by_id(token[0])
                     # Iterate through the indexes and change current value with
