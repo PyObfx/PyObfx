@@ -1,5 +1,8 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
+import os as oss
+import random
+
 test_str = "<- Test ->"
 real_test_str   =   "x"
 test_float = 9.9
