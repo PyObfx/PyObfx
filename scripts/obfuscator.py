@@ -97,7 +97,7 @@ class Obfuscator:
         # Iterate through the tokens and check if
         # token type is Token.Name
         try:
-            for token in self.tokenizer.TOKENS:
+            for t_index, token in enumerate(self.tokenizer.TOKENS):
                 if token[1][0] == token_type:
                     # Get the name value
                     name_value = token[2]
@@ -106,6 +106,11 @@ class Obfuscator:
                     # Fix imports
                     if name_value in list(self.import_dict.keys()):
                         obf_var_name = self.import_dict[name_value]
+                    # Continue if current token is part of a function
+                    # (eg.: random.randint)
+                    if self.tokenizer.TOKENS[t_index+1][1][0] == Token.Operator or \
+                    self.tokenizer.TOKENS[t_index-1][1][0] == Token.Operator:
+                        continue
                     # Find usages for current name with find_index_by_id method
                     token_index = self.tokenizer.find_index_by_id(token[0])
                     # Iterate through the indexes and change current value with
