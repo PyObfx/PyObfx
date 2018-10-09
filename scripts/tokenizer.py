@@ -15,9 +15,8 @@ class Tokenizer:
         # Max ID
         self.max_id = 10 * 10 * 10
         # Get tokens
-        self._tokens = Python3Lexer().get_tokens(data)
-        # Convert to list
-        self._tokens = list(self._tokens)
+        self.logger.log('Getting tokens from file...')
+        self._tokens = list(Python3Lexer().get_tokens(data))
         # Tokenize
         self._tokenize()
 
@@ -49,27 +48,34 @@ class Tokenizer:
             return tok_id
 
     def _tokenize(self):
+        self.logger.log('Tokenizing...')
+        self.logger.log('Total token count: ' + str(len(self._tokens)))
         # Create a dict for checking token IDs
         # and assigning unique ID for every token
         check_dict = dict()
-        # Tokenizer loop
-        for key, token in enumerate(self._tokens):
-            # Get tokens and assign ID for every single token
-            current_token = self._tokens[key]
-            tok_id = self._generate_id()
-            token_value = token[1]
-            # Check if function.name token is a string
-            # to avoid function name and string type conflicts
-            if token[0] == Token.Literal.String.Double or token[0] == Token.Literal.String.Single:
-                self.TOKENS.append((tok_id, current_token, str(token_value)))
-                continue
-            # After checking the ID-token dictionary
-            # add token to list
-            if not str(token_value) in list(check_dict.keys()):
-                check_dict[str(token_value)] = (tok_id, current_token)
-                self.TOKENS.append((tok_id, current_token, str(token_value)))
-            else:
-                self.TOKENS.append(
-                    (check_dict[token_value][0], check_dict[token_value][1], str(token_value)))
+        try:
+            # Tokenizer loop
+            for key, token in enumerate(self._tokens):
+                # Get tokens and assign ID for every single token
+                current_token = self._tokens[key]
+                tok_id = self._generate_id()
+                token_value = token[1]
+                # Check if function.name token is a string
+                # to avoid function name and string type conflicts
+                if token[0] == Token.Literal.String.Double or token[0] == Token.Literal.String.Single:
+                    self.TOKENS.append((tok_id, current_token, str(token_value)))
+                    continue
+                # After checking the ID-token dictionary
+                # add token to list
+                if not str(token_value) in list(check_dict.keys()):
+                    check_dict[str(token_value)] = (tok_id, current_token)
+                    self.TOKENS.append((tok_id, current_token, str(token_value)))
+                else:
+                    self.TOKENS.append(
+                        (check_dict[token_value][0], check_dict[token_value][1], str(token_value)))
+        except Exception as ex:
+            self.logger.log(f'{type(ex).__name__} has occured while tokenizing', state='critical')
+        else:
+            self.logger.log("Tokenized successfully.")
         # Delete ID-token dictionary
         del check_dict
