@@ -16,6 +16,8 @@ def cli_arg_parser():
     parser.add_argument("-p",
                         "--pack",
                         help="Available packers: bz2, gz, lzma")
+    parser.add_argument("-o", "--out",
+                        help="Destination for the output file")
     # Return to dictionary
     return vars(parser.parse_args())
 

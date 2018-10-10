@@ -371,6 +371,7 @@ class Obfuscator:
 
     def _save_obfuscated_file(self):
             try:
+                path_for_output = "./" if not self.args["out"] else self.args["out"] + "/"
                 new_file_content = ''
                 # Shebang check & fix
                 for index, token in enumerate(self.tokenizer.TOKENS[:4]):
@@ -392,7 +393,7 @@ class Obfuscator:
                 # Pack
                 new_file_content = self._pack(new_file_content)
                 # Write file
-                write_file(new_file_name, new_file_content)
+                write_file(path_for_output + new_file_name, new_file_content)
             except Exception as ex:
                 self.logger.log(f'{type(ex).__name__} has occured while saving the obfuscated file', state='error')
             else:
