@@ -299,16 +299,20 @@ class Obfuscator:
 
     def _prepare_imports(self):
         self.logger.log('Extracting imports...')
-         # for the content to be obfuscated
+        # for the content to be obfuscated
         replaced = ""
         # for the  remaining content except import parts
         other_content = ""
         obf_dict = {}
+        enter = False
+        file_content_ln = self.file_content.split('\n')
         try:
             # Drafts
             draft1 = '^from\s+(.+)\s+import\s+(.*)'
             draft2 = '^import\s+(.+)'
-            for line in self.file_content.split('\n'):
+            for num, line in enumerate(file_content_ln):
+
+                #-------------------------------#
                 que1 = re.search('as\s+(.+)$', line) # import .. as ..
                 if que1:
                     # same for the next 4 steps
@@ -317,11 +321,63 @@ class Obfuscator:
                     real_namespace = que1.group(1)
                     obf_dict[real_namespace] = obf_name
 
-                    replaced += line.split('as')[0] + 'as ' + obf_name + '\n'    
+                    replaced += line.split('as')[0] + 'as ' + obf_name + '\n'
                     continue
+                #-------------------------------#
                     
                 que2 = re.search(draft1, line) 
                 if que2:
+                    if que2.group(2).strip() == '*':
+                        obf_dict[que2.group(2).strip()] = que2.group(2).strip()
+                        replaced += line + '\n'
+                        continue
+                    # from x import (y, z, t)
+                    re_imp = re.search('\((.+)\)', line)
+                    if re_imp: #re_imp: x,y,z
+                        for namespace in re_imp.group(1).split(','):
+                            # routine
+                            obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
+                            real_namespace = namespace.strip()
+                            obf_dict[real_namespace] = obf_name
+
+                            replaced += f"from {que2.group(1)} import {namespace} as {obf_name}\n"
+                        continue
+                    #----------------------------#
+
+                    if '(' in que2.group(2) and not ')' in que2.group(2):
+                        
+                        # from x import (
+                        #   y,z,a,
+                        #   b,c,d
+                        #   )
+
+                        
+                        # this code block is for catching the 
+                        # namespaces between '(' and ')'
+                        enter = True
+                        index = 1
+                        tmp = ""
+                        while True:
+                            new_ln = file_content_ln[num + index]
+                            tmp += new_ln
+                            index += 1
+                            if ')' in new_ln:
+                                break   
+                        
+                        tmp = tmp.replace(')','')
+                        namesp_list = [i.strip() for i in tmp.split(',')]
+                        
+                        for namesp in namesp_list:
+                            # routine
+                            obf_name = generate_rand_str(1, len(namesp.strip()) * self.obf_len_constant)
+                            real_namespace = namesp.strip()
+                            obf_dict[real_namespace] = obf_name
+                            
+                            replaced += f"from {que2.group(1)} import {namesp} as {obf_name}\n"
+                            continue
+
+                    # ------------------------------ #
+                    
                     if ',' in que2.group(2):
                         for namespace in que2.group(2).split(','): # from x import y,z,t
                             obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
@@ -331,19 +387,20 @@ class Obfuscator:
                             replaced += f"from {que2.group(1)} import {namespace} as {obf_name}\n"
 
                         continue
+                    # ---------------------------- #
 
-                    else: # from x import y (single)
+                    if not ',' in que2.group(2) and not '(' in que2.group(2): # from x import y (single)
                         obf_name = generate_rand_str(1, len(que2.group(2)) * self.obf_len_constant)
                         real_namespace = que2.group(2)
                         obf_dict[real_namespace] = obf_name
 
                         replaced += re.sub(draft1, line + f' as {obf_name}\n', line)
                     continue
-                      
+                
+                # ------------------------- #
                 que3 = re.search(draft2, line)
                 if que3:
-                    if ',' in que3.group(0):
-                        # print('---> ' + str(que.group(1)))
+                    if ',' in que3.group(1):
                         for namespace in que3.group(1).split(','): # import x,y,z
                             obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
                             real_namespace = namespace.strip()
@@ -351,6 +408,7 @@ class Obfuscator:
 
                             replaced += f'import {namespace} as {obf_name}\n'
                         continue
+                    # -------------------- #
                     else:
                         obf_name = generate_rand_str(1, len(que3.group(1)) * self.obf_len_constant)
                         real_namespace = que3.group(1)
@@ -358,6 +416,14 @@ class Obfuscator:
 
                         replaced += f"import {real_namespace} as {obf_name}\n"
                         continue
+                # --------------------- #
+                # Escape other import things
+                if enter:
+                    if '(' in line:
+                        enter = True
+                    continue
+                
+                
                 # all contents except import
                 other_content += line + '\n'
 
