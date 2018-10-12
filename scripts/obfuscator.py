@@ -46,7 +46,7 @@ class Obfuscator:
         self.deobfuscator_name = generate_rand_str(1, 10)
         self.str_deobfuscator_name = generate_rand_str(1, 10)
         # Quote list
-        self.quotes = ["'", '"', '"""', "'''"]
+        self.quotes = ["'", '"']
         # Boolean value list
         self.boolean_val = ['True', 'False']
         # Escape Sequences
