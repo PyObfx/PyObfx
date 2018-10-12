@@ -122,7 +122,7 @@ class Obfuscator:
                         self.tokenizer.TOKENS[index] = (current_token[0], 
                             (Token.Name, obf_var_name), obf_var_name)
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while obfuscating names', state='error')
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating names \n[{ex}]', state='error')
         else:
             self.logger.log(str(token_type).split('.')[-1] + " obfuscation done.")
 
@@ -167,7 +167,7 @@ class Obfuscator:
                             current_token[0], current_token[1],
                             f'{self.deobfuscator_name}({obf_val})')
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while obfuscating variables', state='error')
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating variables \n[{ex}]', state='error')
         else:
             self.logger.log(str(token_type).split('.')[-1] + " obfuscation done.")
 
@@ -204,7 +204,7 @@ class Obfuscator:
                                 self.tokenizer.TOKENS.pop(index-n_index)
                                 self.tokenizer.TOKENS.pop(index)
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while obfuscating strings', state='error')
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating strings \n[{ex}]', state='error')
         else:
             self.logger.log("String obfuscation done.")
 
@@ -219,14 +219,14 @@ class Obfuscator:
         try:
             self._obfuscate_names(Token.Name)
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while obfuscating variable names', 'error')
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating variable names \n[{ex}]', 'error')
         else:
             self.logger.log(f'Obfuscated variable names')
         # Function Name Obfuscation
         try:
             self._obfuscate_names(Token.Name.Function)
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while obfuscating function names', 'error')
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating function names \n[{ex}]', 'error')
         else:
             self.logger.log(f'Obfuscated function names')
         try:
@@ -242,7 +242,7 @@ class Obfuscator:
             # String Obfuscation
             self._obfuscate_strings(obfuscator)
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while obfuscating values', 'error')
+            self.logger.log(f'{type(ex).__name__} has occured while obfuscating values \n[{ex}]', 'error')
         else:
             self.logger.log(f'Obfuscated values')
         # Save file
@@ -271,7 +271,7 @@ class Obfuscator:
         try:
             new_file_content = self._pack(new_file_content)
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while packing the obfuscated file', 'error')
+            self.logger.log(f'{type(ex).__name__} has occured while packing the obfuscated file \n[{ex}]', 'error')
         else:
             self.logger.log('Packed the obfuscated file')
         # Write file
@@ -294,7 +294,7 @@ class Obfuscator:
             except KeyError:
                 pass
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while packing the obfuscated file', state='error')
+            self.logger.log(f'{type(ex).__name__} has occured while packing the obfuscated file \n[{ex}]', state='error')
         return file_content
 
     def _prepare_imports(self):
@@ -423,7 +423,7 @@ class Obfuscator:
             # eleminate the class variable from import parts
             self.file_content = other_content    
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while extracting the imports', state='critical')
+            self.logger.log(f'{type(ex).__name__} has occured while extracting the imports \n[{ex}]', state='critical')
         else:
             self.logger.log('Imports extracted from source.')
         return (obf_dict, replaced)
@@ -454,10 +454,9 @@ class Obfuscator:
                 # Pack
                 new_file_content = self._pack(new_file_content)
                 # Write file
-                print(path_for_output + new_file_name)
                 write_file(path_for_output + new_file_name, new_file_content)
             except Exception as ex:
-                self.logger.log(f'{type(ex).__name__} has occured while saving the obfuscated file', state='error')
+                self.logger.log(f'{type(ex).__name__} has occured while saving the obfuscated file \n[{ex}]', state='error')
             else:
                 self.logger.log("Successfully obfuscated.")
                 self.logger.log("Saved to \"" + new_file_name + "\"")

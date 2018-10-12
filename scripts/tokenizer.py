@@ -74,7 +74,7 @@ class Tokenizer:
                     self.TOKENS.append(
                         (check_dict[token_value][0], check_dict[token_value][1], str(token_value)))
         except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while tokenizing', state='critical')
+            self.logger.log(f'{type(ex).__name__} has occured while tokenizing \n[{ex}]', state='critical')
         else:
             self.logger.log("Tokenized successfully.")
         # Delete ID-token dictionary
