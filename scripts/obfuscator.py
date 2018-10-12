@@ -311,7 +311,6 @@ class Obfuscator:
             draft1 = '^from\s+(.+)\s+import\s+(.*)'
             draft2 = '^import\s+(.+)'
             for num, line in enumerate(file_content_ln):
-
                 #-------------------------------#
                 que1 = re.search('as\s+(.+)$', line) # import .. as ..
                 if que1:
@@ -324,7 +323,6 @@ class Obfuscator:
                     replaced += line.split('as')[0] + 'as ' + obf_name + '\n'
                     continue
                 #-------------------------------#
-                    
                 que2 = re.search(draft1, line) 
                 if que2:
                     if que2.group(2).strip() == '*':
@@ -351,7 +349,6 @@ class Obfuscator:
                         #   b,c,d
                         #   )
 
-                        
                         # this code block is for catching the 
                         # namespaces between '(' and ')'
                         enter = True
@@ -375,9 +372,7 @@ class Obfuscator:
                             
                             replaced += f"from {que2.group(1)} import {namesp} as {obf_name}\n"
                             continue
-
                     # ------------------------------ #
-                    
                     if ',' in que2.group(2):
                         for namespace in que2.group(2).split(','): # from x import y,z,t
                             obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
@@ -396,7 +391,6 @@ class Obfuscator:
 
                         replaced += re.sub(draft1, line + f' as {obf_name}\n', line)
                     continue
-                
                 # ------------------------- #
                 que3 = re.search(draft2, line)
                 if que3:
@@ -423,7 +417,6 @@ class Obfuscator:
                         enter = True
                     continue
                 
-                
                 # all contents except import
                 other_content += line + '\n'
 
@@ -448,6 +441,8 @@ class Obfuscator:
                 new_file_name = self.file_name.replace(
                     "." + self.file_name.split('.')[len(self.file_name.split('.'))-1],
                     self.obfx_ext)
+                if "\\" in new_file_name: new_file_name = new_file_name.split('\\')[-1]
+                if "/" in new_file_name: new_file_name = new_file_name.split('/')[-1]
                 # Add header
                 new_file_content += self.obfx_header + '\n'
                 new_file_content += self.import_content + '\n'
@@ -459,11 +454,12 @@ class Obfuscator:
                 # Pack
                 new_file_content = self._pack(new_file_content)
                 # Write file
+                print(path_for_output + new_file_name)
                 write_file(path_for_output + new_file_name, new_file_content)
             except Exception as ex:
                 self.logger.log(f'{type(ex).__name__} has occured while saving the obfuscated file', state='error')
             else:
                 self.logger.log("Successfully obfuscated.")
                 self.logger.log("Saved to \"" + new_file_name + "\"")
-                print("\n\n" + new_file_content)  # testing
+                #print("\n\n" + new_file_content)  # testing
 
