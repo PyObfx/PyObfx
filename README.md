@@ -1,4 +1,7 @@
 # PyObfx
-Python3 Obfuscator
-# WIP
-Check `dev` branch for updates.
+Python Obfuscation tool.
+
+# How to Install
+```
+pip install -r requirements.txt
+```
