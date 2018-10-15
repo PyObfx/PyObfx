@@ -1,8 +1,7 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 from colorama import Fore, Style
-import platform
-import time
+import platform, time, os
 
 class Log:
     states = {
@@ -11,12 +10,16 @@ class Log:
             'info': ('[INFO]', Fore.GREEN)
             }
     _RESET = Fore.RESET
-    def __init__(self, path=None):
-        self.path = path
+    def __init__(self, log_name=None):
         self.os = platform.system()
+        if log_name:
+            os.makedirs('logs', exist_ok=True)
+            self.path = os.path.join(os.getcwd(), os.path.join('logs', log_name))
+        else:
+            self.path = None
 
     def _write(self, msg, state):
-        content = f"[{time.strftime('%X')}] {self.states[state][0]} {msg}"
+        content = f"[{time.strftime('%X')}] {self.states[state][0]} {msg}\n"
         with open(self.path, 'a') as f:
             f.write(content)
 

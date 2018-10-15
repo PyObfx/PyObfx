@@ -16,6 +16,11 @@ def cli_arg_parser():
     parser.add_argument("-p",
                         "--pack",
                         help="Available packers: bz2, gz, lzma")
+    parser.add_argument("-s",
+                        "--silent",
+                        action="store_true",
+                        help="Not save log file(s)")
+    
     # Return to dictionary
     return vars(parser.parse_args())
 
