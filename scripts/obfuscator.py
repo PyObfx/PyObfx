@@ -12,7 +12,7 @@ from scripts.packer import *
 class Obfuscator:
     def __init__(self, args):
         # Logger
-        self.logger = Log() if args['silent'] else Log(f"pyobfx_log-{time.strftime('%X')}.txt")
+        self.logger = Log(log_name=f"pyobfx_log-{time.strftime('%X')}.txt", active=args['silent']) if not args['no_log'] else Log(active=args['silent'])
         self.logger.log('Starting obfuscator')
         # Header for obfuscated file
         self.obfx_header = "# Obfuscated with PyObfx #"

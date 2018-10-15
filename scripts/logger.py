@@ -10,8 +10,9 @@ class Log:
             'info': ('[INFO]', Fore.GREEN)
             }
     _RESET = Fore.RESET
-    def __init__(self, log_name=None):
+    def __init__(self, active=True, log_name=None):
         self.os = platform.system()
+        self.active = active
         if log_name:
             os.makedirs('logs', exist_ok=True)
             self.path = os.path.join(os.getcwd(), os.path.join('logs', log_name))
@@ -30,8 +31,9 @@ class Log:
             pass
 
     def log(self, msg, state='info'):
-        content = f"{Style.BRIGHT}{self.states[state][1] if self.os == 'Linux' else ''}[{time.strftime('%X')}] {self.states[state][0]} {msg}{self._RESET}{Style.RESET_ALL}"
-        print(content)
+        if not self.active:
+            content = f"{Style.BRIGHT}{self.states[state][1] if self.os == 'Linux' else ''}[{time.strftime('%X')}] {self.states[state][0]} {msg}{self._RESET}{Style.RESET_ALL}"
+            print(content)
         if self.path:
             self._write(msg=msg, state=state)
 
