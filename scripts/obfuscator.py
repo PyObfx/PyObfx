@@ -1,6 +1,6 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-import random, re
+import random, re, time, os
 from scripts.tokenizer import Tokenizer
 from scripts.strgen import generate_rand_str
 from pygments.token import Token
@@ -8,10 +8,11 @@ from scripts.io import read_file, write_file
 from scripts.logger import Log
 from scripts.packer import *
 
+
 class Obfuscator:
     def __init__(self, args):
         # Logger
-        self.logger = Log()
+        self.logger = Log(log_name=f"pyobfx_log-{time.strftime('%X')}.txt", active=args['silent']) if not args['no_log'] else Log(active=args['silent'])
         self.logger.log('Starting obfuscator')
         # Header for obfuscated file
         self.obfx_header = "# Obfuscated with PyObfx #"
