@@ -9,7 +9,7 @@ def read_file(filename):
     if os.path.splitext(filename)[1] != '.py':
         raise FileTypeException("Only Python(.py) file.")
 
-    with open(filename) as file:
+    with io.open(filename, "r", encoding="utf-8") as file:
         data = file.read()
     return data
 
