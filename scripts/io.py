@@ -19,3 +19,7 @@ def write_file(filename, content):
     # Avoid charmap and encoding issues
     with io.open(filename, "w", encoding="utf-8") as file:
         file.write(content)
+
+def append_file(filename, content):
+    with io.open(filename, "a", encoding="utf-8") as file:
+        file.write(content)
