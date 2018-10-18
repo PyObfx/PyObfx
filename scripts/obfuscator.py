@@ -1,6 +1,6 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-import random, re, base64
+import random, re
 from scripts.tokenizer import Tokenizer
 from scripts.strgen import generate_rand_str
 from pygments.token import Token
