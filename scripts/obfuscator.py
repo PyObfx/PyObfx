@@ -296,7 +296,7 @@ class Obfuscator:
             draft2 = '^import\s+(.+)'
             for num, line in enumerate(file_content_ln):
                 #-------------------------------#
-                que1 = re.search('as\s+(.+)$', line) # import .. as ..
+                que1 = re.search('as\s+(A-Za-z_)$', line) # import .. as ..
                 if que1:
                     # same for the next 4 steps
                     # Get random variable name
