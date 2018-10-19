@@ -16,7 +16,6 @@ class Obfuscator:
         self.logger.log('Starting obfuscator')
         # Strgen type
         self.strgen_type = {'jp':3, 'ch':4, 'in':5}[args['str_gen']] if args['str_gen'] and args['str_gen'] in ['jp', 'ch', 'in'] else 1
-        print(self.strgen_type)
         # Header for obfuscated file
         self.obfx_header = "# Obfuscated with PyObfx #"
         # Escape placeholder
@@ -32,6 +31,7 @@ class Obfuscator:
         self.quote_dist_constant = 5
         # Imports obfuscation
         self.import_dict, self.import_content = self._prepare_imports() # warn: change self.file_content variable
+        print(self.import_content)
         # Escape chars in file
         self.escaped_file = self._escape_file(self.file_content)
         # Tokenize the source and retrieve tokenizer object
@@ -196,7 +196,7 @@ class Obfuscator:
         try:
             for token in self.tokenizer.TOKENS:
                 if token[1][0] == Token.Literal.String.Double and not token[2] in self.quotes or \
-                token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes: 
+                token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes:
                     string_value = self._unescape_str(token[2])
                     # String obfuscation procedure
                     obfuscated = ''
