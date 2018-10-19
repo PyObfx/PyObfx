@@ -38,8 +38,10 @@ class Obfuscator:
         # Deobfuscator declarations
         self.deobfuscators = {
             1: "lambda n: (n - ({} % {})) - {}".format(*self.ints[::-1]),
-            2: "lambda n: int((n ^ {}) / {})".format(*self.ints[:2]),
-            3: "lambda n: n - sum({})".format(str(self.ints))
+            2: "lambda n: (n ^ {}) / {}".format(*self.ints[:2]),
+            3: "lambda n: n - sum({})".format(str(self.ints)),
+            4: "lambda n: (n + ({} + {})) / {}".format(*self.ints[::-1]),
+            5: "lambda n: (n + {}) / ({} + {})".format(*self.ints)
         }
         # New file extension for obfuscated file
         self.obfx_ext = "_obfx.py"
@@ -56,14 +58,19 @@ class Obfuscator:
          ('\t', '\\t'), ('\v', '\\v')]
 
     # str.format with int deobfuscator name
-    string_deobfuscator = "lambda s: ''.join(chr({}(ord(c))) for c in s)"
+    string_deobfuscator = "lambda s: ''.join(chr(int({}(ord(c)))) for c in s)"
 
     # Obfuscator methods
     def obfuscation1(self, n):
         return (n + self.ints[0]) + (self.ints[2] % self.ints[1])
-    def obfuscation2(self, n): return (n * self.ints[1]) ^ self.ints[0]
-    def obfuscation3(self, n): return n + sum(self.ints)
-
+    def obfuscation2(self, n):
+        return (n * self.ints[1]) ^ self.ints[0]
+    def obfuscation3(self, n):
+        return n + sum(self.ints)
+    def obfuscation4(self, n):
+        return (n * self.ints[0]) - (self.ints[2] + self.ints[2])
+    def obfuscation5(self, n):
+        return (n * (self.ints[0] + self.ints[1])) - self.ints[2]
     # Escape string
     def _escape(self, s):
         s = s.replace('"', r'\"').replace("'", r"\'")
@@ -161,12 +168,18 @@ class Obfuscator:
                             # Update TOKENS
                             self.tokenizer.TOKENS[index] = (
                             current_token[0], current_token[1],
-                            f'bool({self.deobfuscator_name}({obf_val}))')
+                            f'bool(int({self.deobfuscator_name}({obf_val})))')
                         else:
                             # Update TOKENS
-                            self.tokenizer.TOKENS[index] = (
-                            current_token[0], current_token[1],
-                            f'{self.deobfuscator_name}({obf_val})')
+                            if token_type == Token.Literal.Number.Float:
+                                self.tokenizer.TOKENS[index] = (
+                                current_token[0], current_token[1],
+                                f'{self.deobfuscator_name}({obf_val})')
+                            elif token_type == Token.Literal.Number.Integer:
+                                self.tokenizer.TOKENS[index] = (
+                                current_token[0], current_token[1],
+                                f'int({self.deobfuscator_name}({obf_val}))')
+
         except Exception as ex:
             self.logger.log(f'{type(ex).__name__} has occured while obfuscating variables \n[{ex}]', state='error')
         else:
@@ -209,10 +222,10 @@ class Obfuscator:
         else:
             self.logger.log("String obfuscation done.")
 
-    def obfuscate(self, obfuscation=1):
+    def obfuscate(self, obfuscation=random.randint(1, 5)):
         self.logger.log('Obfuscation started')
         # Declare obfuscator
-        obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3}
+        obfuscators = {1: self.obfuscation1, 2: self.obfuscation2, 3: self.obfuscation3, 4: self.obfuscation4, 5: self.obfuscation5}
         # Select obfuscator
         obfuscator = obfuscators[obfuscation]
         self.deobfuscator = self.deobfuscators[obfuscation]
@@ -235,8 +248,9 @@ class Obfuscator:
             self._obfuscate_vars(obfuscator, 
                 Token.Literal.Number.Integer)
             # Float Obfuscation
-            self._obfuscate_vars(obfuscator, 
-                Token.Literal.Number.Float)
+            if obfuscation != 2: # sadly, ^ operator doesn't work on floats
+                self._obfuscate_vars(obfuscator, 
+                    Token.Literal.Number.Float)
             # Boolean Obfuscation
             self._obfuscate_vars(obfuscator, 
                 Token.Keyword.Constant)
@@ -248,37 +262,6 @@ class Obfuscator:
             self.logger.log(f'Obfuscated values')
         # Save file
         self._save_obfuscated_file()
-    
-    def _save_obfuscated_file(self):
-        new_file_content = ''
-        # Shebang check & fix
-        for index, token in enumerate(self.tokenizer.TOKENS[:4]):
-            if token[2].startswith('#') or token[2] == '\n':
-                new_file_content += token[2]
-                self.tokenizer.TOKENS.pop(0)
-        # New file name
-        new_file_name = self.file_name.replace(
-            "." + self.file_name.split('.')[len(self.file_name.split('.'))-1],
-            self.obfx_ext)
-        # Add header
-        new_file_content += self.obfx_header + '\n'
-        new_file_content += self.import_content + '\n'
-        # Write deobfuscator functions
-        new_file_content += f'{self.deobfuscator_name} = {self.deobfuscator}\n{self.str_deobfuscator_name} = {self.string_deobfuscator.format(self.deobfuscator_name)}\n'
-        # Create new file content from tokens 
-        for token in self.tokenizer.TOKENS:
-            new_file_content += token[2]
-        # Pack
-        try:
-            new_file_content = self._pack(new_file_content)
-        except Exception as ex:
-            self.logger.log(f'{type(ex).__name__} has occured while packing the obfuscated file \n[{ex}]', 'error')
-        else:
-            self.logger.log('Packed the obfuscated file')
-        # Write file
-        write_file(new_file_name, new_file_content)
-        print("Successfully obfuscated.\nSaved to: " + new_file_name)
-        print(new_file_content)  # testing
 
     def _pack(self, file_content):
         try:
@@ -290,7 +273,7 @@ class Obfuscator:
             }
             # Pack file if -p argument is provided and packer type is valid
             try:
-                file_content = packer_dispatcher[self.args['pack']]
+                file_content = self.obfx_header + '\n' + packer_dispatcher[self.args['pack']]
                 self.logger.log('File packed. (' + self.args['pack'] + ')')
             except KeyError:
                 pass
