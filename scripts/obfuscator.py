@@ -298,7 +298,7 @@ class Obfuscator:
             draft2 = '^import\s+(.+)'
             for num, line in enumerate(file_content_ln):
                 #-------------------------------#
-                que1 = re.search('as\s+(A-Za-z_)$', line) # import .. as ..
+                que1 = re.search('as\s+([A-Za-z]+)$', line) # import .. as ..
                 if que1:
                     # same for the next 4 steps
                     # Get random variable name
@@ -307,6 +307,7 @@ class Obfuscator:
                     obf_dict[real_namespace] = obf_name
 
                     replaced += line.split('as')[0] + 'as ' + obf_name + '\n'
+                    
                     continue
                 #-------------------------------#
                 que2 = re.search(draft1, line) 
@@ -376,7 +377,8 @@ class Obfuscator:
                         obf_dict[real_namespace] = obf_name
 
                         replaced += re.sub(draft1, line + f' as {obf_name}\n', line)
-                    continue
+                        
+                        continue
                 # ------------------------- #
                 que3 = re.search(draft2, line)
                 if que3:
@@ -395,6 +397,7 @@ class Obfuscator:
                         obf_dict[real_namespace] = obf_name
 
                         replaced += f"import {real_namespace} as {obf_name}\n"
+                    
                         continue
                 # --------------------- #
                 # Escape other import things
