@@ -14,6 +14,8 @@ class Obfuscator:
         # Logger
         self.logger = Log(log_name=f"pyobfx_log-{time.strftime('%X')}.txt", active=args['silent']) if not args['no_log'] else Log(active=args['silent'])
         self.logger.log('Starting obfuscator')
+        # Strgen type
+        self.strgen_type = {'jp':3, 'ch':4, 'in':5}[args['str_gen']] if args['str_gen'] and args['str_gen'] in ['jp', 'ch', 'in'] else 1
         # Header for obfuscated file
         self.obfx_header = "# Obfuscated with PyObfx #"
         # Escape placeholder
@@ -29,6 +31,7 @@ class Obfuscator:
         self.quote_dist_constant = 5
         # Imports obfuscation
         self.import_dict, self.import_content = self._prepare_imports() # warn: change self.file_content variable
+        print(self.import_content)
         # Escape chars in file
         self.escaped_file = self._escape_file(self.file_content)
         # Tokenize the source and retrieve tokenizer object
@@ -46,8 +49,8 @@ class Obfuscator:
         # New file extension for obfuscated file
         self.obfx_ext = "_obfx.py"
         # Randomized deobfuscator function names
-        self.deobfuscator_name = generate_rand_str(1, 10)
-        self.str_deobfuscator_name = generate_rand_str(1, 10)
+        self.deobfuscator_name = generate_rand_str(self.strgen_type, 10)
+        self.str_deobfuscator_name = generate_rand_str(self.strgen_type, 10)
         # Quote list
         self.quotes = ["'", '"']
         # Boolean value list
@@ -110,7 +113,7 @@ class Obfuscator:
                     # Get the name value
                     name_value = token[2]
                     # Obfuscate the name string
-                    obf_var_name = generate_rand_str(1, len(name_value) * self.obf_len_constant)
+                    obf_var_name = generate_rand_str(self.strgen_type, len(name_value) * self.obf_len_constant)
                     # Fix imports
                     if name_value in list(self.import_dict.keys()):
                         obf_var_name = self.import_dict[name_value]
@@ -193,7 +196,7 @@ class Obfuscator:
         try:
             for token in self.tokenizer.TOKENS:
                 if token[1][0] == Token.Literal.String.Double and not token[2] in self.quotes or \
-                token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes: 
+                token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes:
                     string_value = self._unescape_str(token[2])
                     # String obfuscation procedure
                     obfuscated = ''
@@ -300,7 +303,7 @@ class Obfuscator:
                 if que1:
                     # same for the next 4 steps
                     # Get random variable name
-                    obf_name = generate_rand_str(1, len(que1.group(1)) * self.obf_len_constant)
+                    obf_name = generate_rand_str(self.strgen_type, len(que1.group(1)) * self.obf_len_constant)
                     real_namespace = que1.group(1)
                     obf_dict[real_namespace] = obf_name
 
@@ -318,7 +321,7 @@ class Obfuscator:
                     if re_imp: #re_imp: x,y,z
                         for namespace in re_imp.group(1).split(','):
                             # routine
-                            obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
+                            obf_name = generate_rand_str(self.strgen_type, len(namespace.strip()) * self.obf_len_constant)
                             real_namespace = namespace.strip()
                             obf_dict[real_namespace] = obf_name
 
@@ -350,7 +353,7 @@ class Obfuscator:
                         
                         for namesp in namesp_list:
                             # routine
-                            obf_name = generate_rand_str(1, len(namesp.strip()) * self.obf_len_constant)
+                            obf_name = generate_rand_str(self.strgen_type, len(namesp.strip()) * self.obf_len_constant)
                             real_namespace = namesp.strip()
                             obf_dict[real_namespace] = obf_name
                             
@@ -359,7 +362,7 @@ class Obfuscator:
                     # ------------------------------ #
                     if ',' in que2.group(2):
                         for namespace in que2.group(2).split(','): # from x import y,z,t
-                            obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
+                            obf_name = generate_rand_str(self.strgen_type, len(namespace.strip()) * self.obf_len_constant)
                             real_namespace = namespace.strip()
                             obf_dict[real_namespace] = obf_name
 
@@ -369,7 +372,7 @@ class Obfuscator:
                     # ---------------------------- #
 
                     if not ',' in que2.group(2) and not '(' in que2.group(2): # from x import y (single)
-                        obf_name = generate_rand_str(1, len(que2.group(2)) * self.obf_len_constant)
+                        obf_name = generate_rand_str(self.strgen_type, len(que2.group(2)) * self.obf_len_constant)
                         real_namespace = que2.group(2)
                         obf_dict[real_namespace] = obf_name
 
@@ -380,7 +383,7 @@ class Obfuscator:
                 if que3:
                     if ',' in que3.group(1):
                         for namespace in que3.group(1).split(','): # import x,y,z
-                            obf_name = generate_rand_str(1, len(namespace.strip()) * self.obf_len_constant)
+                            obf_name = generate_rand_str(self.strgen_type, len(namespace.strip()) * self.obf_len_constant)
                             real_namespace = namespace.strip()
                             obf_dict[real_namespace] = obf_name
 
@@ -388,7 +391,7 @@ class Obfuscator:
                         continue
                     # -------------------- #
                     else:
-                        obf_name = generate_rand_str(1, len(que3.group(1)) * self.obf_len_constant)
+                        obf_name = generate_rand_str(self.strgen_type, len(que3.group(1)) * self.obf_len_constant)
                         real_namespace = que3.group(1)
                         obf_dict[real_namespace] = obf_name
 

@@ -1,3 +1,4 @@
+#!/usr/bin/python3.6
 # -*- coding utf:8 -*-
 import random
 import string
@@ -23,3 +24,4 @@ def generate_rand_str(rnd_type, count):
         characters, 
         count if count < len(characters) else len(characters)
     ))
+    

@@ -20,11 +20,13 @@ def cli_arg_parser():
                         "--silent",
                         action="store_true",
                         help="Just quietness")
+    parser.add_argument("-o", "--out",
+                        help="Destination for the output file")
     parser.add_argument("--no-log",
                         action="store_true",
                         help="Not save log file(s)")
-    parser.add_argument("-o", "--out",
-                        help="Destination for the output file")
+    parser.add_argument("--str-gen",
+                        help="Available string generators: jp, ch, in")
     # Return to dictionary
     return vars(parser.parse_args())
 

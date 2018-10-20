@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from colorama import Fore, Style
 import platform, time, os
+from scripts.io import append_file
 
 class Log:
     states = {
@@ -15,20 +16,19 @@ class Log:
         self.active = active
         if log_name:
             os.makedirs('logs', exist_ok=True)
-            self.path = os.path.join(os.getcwd(), os.path.join('logs', log_name))
+            self.path = os.path.join(os.getcwd(), os.path.join('logs', log_name).
+                replace(":", "-")) # [WIN] Filenames must not contain ':'
         else:
             self.path = None
 
     def _write(self, msg, state):
         content = f"[{time.strftime('%X')}] {self.states[state][0]} {msg}\n"
-        with open(self.path, 'a') as f:
-            f.write(content)
+        append_file(self.path, content)
 
     def _clear(self):
         try:
             open(self.path, 'w').close()
-        except:
-            pass
+        except: pass
 
     def log(self, msg, state='info'):
         if not self.active:
