@@ -31,7 +31,6 @@ class Obfuscator:
         self.quote_dist_constant = 5
         # Imports obfuscation
         self.import_dict, self.import_content = self._prepare_imports() # warn: change self.file_content variable
-        print(self.import_content)
         # Escape chars in file
         self.escaped_file = self._escape_file(self.file_content)
         # Tokenize the source and retrieve tokenizer object
