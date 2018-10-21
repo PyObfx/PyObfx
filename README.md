@@ -1,9 +1,10 @@
 <p align="center">
-  <img width="381" height="125" src="https://i.resimyukle.xyz/88HQCP.png"><br/>
+  <img width="600" height="197" src="https://i.resimyukle.xyz/88HQCP.png"><br/>
   <a href="https://github.com/PyObfx/PyObfx/issues"><img src="https://img.shields.io/github/issues/PyObfx/PyObfx.svg"/></a>
-  <a href="https://github.com/PyObfx/PyObfx/blob/master/LICENSE"><img src="https://img.shields.io/github/license/PyObfx/PyObfx.svg"/></a>
+  <a href="https://github.com/PyObfx/PyObfx/pulls"><img src="https://img.shields.io/github/issues-pr/PyObfx/PyObfx.svg"/></a>
   <a href="https://github.com/PyObfx/PyObfx/stargazers"><img src="https://img.shields.io/github/stars/PyObfx/PyObfx.svg"/></a>
   <a href="https://github.com/PyObfx/PyObfx/network"><img src="https://img.shields.io/github/forks/PyObfx/PyObfx.svg"/></a>
+  <a href="https://github.com/PyObfx/PyObfx/blob/master/LICENSE"><img src="https://img.shields.io/github/license/PyObfx/PyObfx.svg"/></a>
 </p>
 
 # PyObfx
