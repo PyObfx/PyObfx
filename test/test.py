@@ -18,10 +18,12 @@ def main():
     print(hi + " " + test_str)
     print(rnd.randint(5, 15))
     wow_time.sleep(1)
+    """docstring"""
     def awesome():
-    	print("awesome")
+    	print("awesome") # Awesome
     	print("\t+\'is this really working?\'\n" + "\t-\"oh, it is\"")
     awesome()
+    print(""" multiline string """)
 
 if __name__ == "__main__":
     main()
