@@ -51,7 +51,7 @@ class Obfuscator:
         self.deobfuscator_name = generate_rand_str(self.strgen_type, 10)
         self.str_deobfuscator_name = generate_rand_str(self.strgen_type, 10)
         # Quote list
-        self.quotes = ["'", '"']
+        self.quotes = ["'", '"', '"""']
         # Boolean value list
         self.boolean_val = ['True', 'False']
         # Escape Sequences
@@ -193,9 +193,16 @@ class Obfuscator:
         # char (quote)
         self.logger.log('Obfuscating strings...')
         try:
-            for token in self.tokenizer.TOKENS:
+            for key, token in enumerate(self.tokenizer.TOKENS):
                 if token[1][0] == Token.Literal.String.Double and not token[2] in self.quotes or \
                 token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes:
+                    # Don't touch multi line strings
+                    try:
+                        if self.tokenizer.TOKENS[key-1][2] == self.quotes[2] or \
+                        self.tokenizer.TOKENS[key+1][2] == self.quotes[2]:
+                            continue
+                    except: pass
+                    # String value
                     string_value = self._unescape_str(token[2])
                     # String obfuscation procedure
                     obfuscated = ''
@@ -449,5 +456,4 @@ class Obfuscator:
             else:
                 self.logger.log("Successfully obfuscated.")
                 self.logger.log("Saved to \"" + new_file_name + "\"")
-                #print("\n\n" + new_file_content)  # testing
-
+                print("\n\n" + new_file_content)  # testing
