@@ -111,6 +111,8 @@ class Obfuscator:
                 if token[1][0] == token_type:
                     # Get the name value
                     name_value = token[2]
+                    if name_value.startswith('__') and name_value.endswith('__'):
+                        continue
                     # Obfuscate the name string
                     obf_var_name = generate_rand_str(self.strgen_type, len(name_value) * self.obf_len_constant)
                     # Fix imports
