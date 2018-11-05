@@ -32,7 +32,7 @@ class Log:
 
     def log(self, msg, state='info'):
         if not self.active:
-            content = f"{Style.BRIGHT}{self.states[state][1] if self.os == 'Linux' else ''}[{time.strftime('%X')}] {self.states[state][0]} {msg}{self._RESET}{Style.RESET_ALL}"
+            content = f"{Style.BRIGHT + self.states[state][1] if self.os == 'Linux' else ''}[{time.strftime('%X')}] {self.states[state][0]} {msg}{self._RESET}{Style.RESET_ALL}"
             print(content)
         if self.path:
             self._write(msg=msg, state=state)
