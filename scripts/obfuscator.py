@@ -458,4 +458,4 @@ class Obfuscator:
             else:
                 self.logger.log("Successfully obfuscated.")
                 self.logger.log("Saved to \"" + new_file_name + "\"")
-                print("\n\n" + new_file_content)  # testing
+                # print("\n\n" + new_file_content)  # testing
