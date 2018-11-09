@@ -3,6 +3,9 @@
 import os as oss
 import random as rnd
 import time as wow_time
+import socket
+
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 test_str = "<- Test ->"
 real_test_str   =   "x"
