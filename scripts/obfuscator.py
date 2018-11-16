@@ -70,7 +70,7 @@ class Obfuscator:
     def obfuscation3(self, n):
         return n + sum(self.ints)
     def obfuscation4(self, n):
-        return (n * self.ints[0]) - (self.ints[2] + self.ints[2])
+        return (n * self.ints[0]) - (self.ints[2] + self.ints[1])
     def obfuscation5(self, n):
         return (n * (self.ints[0] + self.ints[1])) - self.ints[2]
     # Escape string
