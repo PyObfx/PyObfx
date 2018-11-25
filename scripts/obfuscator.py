@@ -129,6 +129,10 @@ class Obfuscator:
                     # Iterate through the indexes and change current value with
                     # new obfuscated value
                     for index in token_index:
+                        # Check if token is a function
+                        # https://github.com/PyObfx/PyObfx/issues/61
+                        if self.tokenizer.TOKENS[index-1][1][0] == Token.Operator: 
+                           continue
                         current_token = self.tokenizer.TOKENS[index]
                         # Change list element
                         self.tokenizer.TOKENS[index] = (current_token[0], 
