@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from scripts.argparser import cli_arg_parser
-from scripts.obfuscator import Obfuscator
 from scripts.banner import print_banner
+from scripts.obfuscator import Obfuscator
+
 
 def main():
     print_banner()
-    Obfuscator(cli_arg_parser()).obfuscate()
+    Obfuscator(**cli_arg_parser()).obfuscate()
+
 
 if __name__ == "__main__":
     main()
