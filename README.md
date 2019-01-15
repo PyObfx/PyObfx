@@ -32,12 +32,12 @@ pip install -r requirements.txt
 
 In order to obfuscate a single file:
 ```
-python3 PyObfx.py -f <file_name>
+python3 PyObfx.py <file_name>
 ```
 
 To pack the file after obfuscation: (Available packers are bz2, gz and lzma)
 ```
-python3 PyObfx.py -f <file_name> -p <packer>
+python3 PyObfx.py <file_name> -p <packer>
 ```
 
 For other options, see:

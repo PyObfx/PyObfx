@@ -10,7 +10,7 @@ from scripts.packer import *
 
 
 class Obfuscator:
-    def __init__(self, args):
+    def __init__(self, **args):
         # Logger
         self.logger = Log(log_name=f"pyobfx_log-{time.strftime('%X')}.txt", active=args['silent']) if not args['no_log'] else Log(active=args['silent'])
         self.logger.log('Starting obfuscator')
@@ -70,7 +70,7 @@ class Obfuscator:
     def obfuscation3(self, n):
         return n + sum(self.ints)
     def obfuscation4(self, n):
-        return (n * self.ints[0]) - (self.ints[2] + self.ints[2])
+        return (n * self.ints[0]) - (self.ints[2] + self.ints[1])
     def obfuscation5(self, n):
         return (n * (self.ints[0] + self.ints[1])) - self.ints[2]
     # Escape string
