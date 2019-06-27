@@ -315,12 +315,10 @@ class Obfuscator:
                 if que1:
                     # same for the next 4 steps
                     # Get random variable name
-                    obf_name = generate_rand_str(self.strgen_type, len(que1.group(1)) * self.obf_len_constant)
-                    real_namespace = que1.group(1)
+                    obf_name = generate_rand_str(self.strgen_type, len(line.split(' as ')[1]) * self.obf_len_constant)
+                    real_namespace = line.split(' as ')[1]
                     obf_dict[real_namespace] = obf_name
-
-                    replaced += line.split('as')[0] + 'as ' + obf_name + '\n'
-                    
+                    replaced += line.split(' as ')[0] + ' as ' + obf_name + '\n'
                     continue
                 #-------------------------------#
                 que2 = re.search(draft1, line) 
