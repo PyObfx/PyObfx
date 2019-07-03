@@ -44,6 +44,76 @@ For other options, see:
 ```
 python3 PyObfx.py -h
 ```
+## Results
+Before Obfuscating:
+```python
+import os as oss
+import random as rnd
+import time as wow_time
+import socket
 
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+test_str = "<- Test ->"
+real_test_str   =   "x"
+test_float = 9.9
+test_int = 0
+test_bool = True
+hi = "Hi! \n"
+
+def main():
+    print(test_float)
+    print(test_int)
+    print(test_bool)
+    print(hi + " " + test_str)
+    print(rnd.randint(5, 15))
+    wow_time.sleep(1)
+    """docstring"""
+    def awesome():
+    	print("awesome") # Awesome
+    	print("\t+\'is this really working?\'\n" + "\t-\"oh, it is\"")
+    awesome()
+    print(""" multiline string """)
+
+if __name__ == "__main__":
+    main()
+```
+After Obfuscating:
+```python
+import os as HzIufY
+import random as bsSOod
+import time as xydWSaztIpRmlqvr
+import socket as SsKHeNIacbCE
+
+HfRtJhXqkg = lambda n: (n - (5 % 5)) - 2
+RboljamGsh = lambda s: ''.join(chr(int(HfRtJhXqkg(ord(c)))) for c in s)
+
+CY = SsKHeNIacbCE.socket(SsKHeNIacbCE.AF_INET,SsKHeNIacbCE.SOCK_STREAM)
+
+ZJgMixQLFvIOVkWATrhdDPjaHNsfKqBn = RboljamGsh(">/\"Vguv\"/@")
+sCIhJLAvexrBHnMtZYjRzgwqGu   =   RboljamGsh("z")
+dgsHVSxQucJwrLWbYoflXFzZyAUTmjOkqtBnvpGK = HfRtJhXqkg(11.9)
+KzcOpAuoPlXrTEvZSYLgByidFDaUwetM = int(HfRtJhXqkg(2))
+QiKPneOHJCIFEWxyYvXcshTquMAULdSBZrpw = bool(int(HfRtJhXqkg(3)))
+HEUcxPKD = RboljamGsh("Jk#\"\f")
+
+def fiZdbpzr():
+    print(dgsHVSxQucJwrLWbYoflXFzZyAUTmjOkqtBnvpGK)
+    print(KzcOpAuoPlXrTEvZSYLgByidFDaUwetM)
+    print(QiKPneOHJCIFEWxyYvXcshTquMAULdSBZrpw)
+    print(HEUcxPKD + RboljamGsh("\"") + ZJgMixQLFvIOVkWATrhdDPjaHNsfKqBn)
+    print(bsSOod.randint(int(HfRtJhXqkg(7)), int(HfRtJhXqkg(17))))
+    xydWSaztIpRmlqvr.sleep(int(HfRtJhXqkg(3)))
+    """docstring"""
+    def CNgSHDbrXecMZi():
+    	print(RboljamGsh("cyguqog")) # Awesome
+    	print(RboljamGsh("\v-)ku\"vjku\"tgcnn{\"yqtmkpiA)\f") + RboljamGsh("\v/$qj.\"kv\"ku$"))
+    CNgSHDbrXecMZi()
+    print(""" multiline string """)
+
+if __name__ == RboljamGsh("aaockpaa"):
+    fiZdbpzr()
+
+```
 ## License
 This project is licensed under the GPL v3 License - see the [LICENSE](https://github.com/PyObfx/PyObfx/blob/master/LICENSE) file for details.
