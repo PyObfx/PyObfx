@@ -7,7 +7,7 @@ py_keywords  = __import__('keyword').kwlist
 gen_alphabet = lambda x, y: ''.join(map(chr, range(x, y)))
 
 hindi    = gen_alphabet(0x900, 0x97F)   # Devanagari ( 0900 - 097F )
-chinese  = gen_alphabet(0x4E00, 0x9FFF) # CJK Unified Ideographs ( 4E00 - 9FFF )
+chinese  = gen_alphabet(0x4E00, 0x9FBF) # CJK Unified Ideographs ( 4E00 - 9FFF )
 japanese = gen_alphabet(0x3040, 0x309F) # Hiragana ( 3040 - 309F)
 
 random_types = {

@@ -35,6 +35,8 @@ class Obfuscator:
         self.escaped_file = self._escape_file(self.file_content)
         # Tokenize the source and retrieve tokenizer object
         self.tokenizer = Tokenizer(self.escaped_file)
+        self.has_handled = set()
+        self.build_in_func = ['exit', ''] #过滤python内建函数
         # Random integers for obfuscation
         self.ints = [random.randint(1, 5) for _ in range(3)]
         # Deobfuscator declarations
@@ -108,9 +110,11 @@ class Obfuscator:
         # token type is Token.Name
         try:
             for t_index, token in enumerate(self.tokenizer.TOKENS):
-                if token[1][0] == token_type:
-                    # Get the name value
-                    name_value = token[2]
+                # Get the name value
+                name_value = token[2]
+                if token[1][0] == token_type and token[0] not in self.has_handled \
+                    and name_value not in self.build_in_func:
+
                     if name_value.startswith('__') and name_value.endswith('__'):
                         continue
                     # Obfuscate the name string
@@ -128,15 +132,17 @@ class Obfuscator:
                     token_index = self.tokenizer.find_index_by_id(token[0])
                     # Iterate through the indexes and change current value with
                     # new obfuscated value
+                    self.has_handled.add(token[0])
                     for index in token_index:
                         # Check if token is a function
                         # https://github.com/PyObfx/PyObfx/issues/61
-                        if self.tokenizer.TOKENS[index-1][1][0] == Token.Operator: 
+                        if self.tokenizer.TOKENS[index-1][1][0] == Token.Operator:
                            continue
                         current_token = self.tokenizer.TOKENS[index]
                         # Change list element
-                        self.tokenizer.TOKENS[index] = (current_token[0], 
+                        self.tokenizer.TOKENS[index] = (current_token[0],
                             (Token.Name, obf_var_name), obf_var_name)
+
         except Exception as ex:
             self.logger.log(f'{type(ex).__name__} has occured while obfuscating names \n[{ex}]', state='error')
         else:
@@ -158,7 +164,7 @@ class Obfuscator:
         self.logger.log("Obfuscating " + str(token_type).split('.')[-1] + "s...")
         try:
             for token in self.tokenizer.TOKENS:
-                if token[1][0] == token_type:
+                if token[1][0] == token_type and token[0] not in self.has_handled:
                     # Cast and obfuscate the value
                     obf_val = obfuscator(cast(token[2]))
                     # Find usages for current token
@@ -166,6 +172,7 @@ class Obfuscator:
                     # Update old values with new obfuscated values
                     # If obfuscation type is a boolean obfuscation
                     # don't forget to add casting to new string
+                    self.has_handled.add(token[0])
                     for index in token_index:
                         # Get token
                         current_token = self.tokenizer.TOKENS[index]
@@ -201,11 +208,32 @@ class Obfuscator:
         try:
             for key, token in enumerate(self.tokenizer.TOKENS):
                 if token[1][0] == Token.Literal.String.Double and not token[2] in self.quotes or \
-                token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes:
+                token[1][0] == Token.Literal.String.Single and not token[2] in self.quotes \
+                        and token[0] not in self.has_handled:
                     # Don't touch multi line strings
                     try:
                         if self.tokenizer.TOKENS[key-1][2] == self.quotes[2] or \
                         self.tokenizer.TOKENS[key+1][2] == self.quotes[2]:
+                            continue
+                    except: pass
+                    # only handle one string ,such as "123" or '123'
+                    # other not handle
+                    try:
+                        if token[1][0] != self.tokenizer.TOKENS[key-1][1][0]:
+                            continue
+                        if token[1][0] != self.tokenizer.TOKENS[key+1][1][0]:
+                            continue
+                        if token[1][0] == self.tokenizer.TOKENS[key-2][1][0]:
+                            continue
+                        if token[1][0] == self.tokenizer.TOKENS[key+2][1][0]:
+                            continue
+                        if self.tokenizer.TOKENS[key-2][1][0] == Token.Literal.String.Interpol:
+                            continue
+                        if self.tokenizer.TOKENS[key+2][1][0] == Token.Literal.String.Interpol:
+                            continue
+                        if self.tokenizer.TOKENS[key-3][1][0] == Token.Literal.String.Interpol:
+                            continue
+                        if self.tokenizer.TOKENS[key+3][1][0] == Token.Literal.String.Interpol:
                             continue
                     except: pass
                     # String value
@@ -222,6 +250,7 @@ class Obfuscator:
                     token_index = self.tokenizer.find_index_by_id(token[0])
                     # Iterate through the indexes and change current value with
                     # new obfuscated value
+                    self.has_handled.add(token[0])
                     for index in token_index:
                         current_token = self.tokenizer.TOKENS[index]
                         self.tokenizer.TOKENS[index] = (current_token[0], 
@@ -254,23 +283,25 @@ class Obfuscator:
         # Function Name Obfuscation
         try:
             self._obfuscate_names(Token.Name.Function)
+            pass
         except Exception as ex:
             self.logger.log(f'{type(ex).__name__} has occured while obfuscating function names \n[{ex}]', 'error')
         else:
             self.logger.log(f'Obfuscated function names')
         try:
             # Integer Obfuscation
-            self._obfuscate_vars(obfuscator, 
+            self._obfuscate_vars(obfuscator,
                 Token.Literal.Number.Integer)
             # Float Obfuscation
             if obfuscation != 2: # sadly, ^ operator doesn't work on floats
-                self._obfuscate_vars(obfuscator, 
+                self._obfuscate_vars(obfuscator,
                     Token.Literal.Number.Float)
-            # Boolean Obfuscation
-            self._obfuscate_vars(obfuscator, 
+            # # Boolean Obfuscation
+            self._obfuscate_vars(obfuscator,
                 Token.Keyword.Constant)
             # String Obfuscation
             self._obfuscate_strings(obfuscator)
+            pass
         except Exception as ex:
             self.logger.log(f'{type(ex).__name__} has occured while obfuscating values \n[{ex}]', 'error')
         else:
